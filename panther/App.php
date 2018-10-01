@@ -6,6 +6,10 @@ class App {
 
     private $entities = [];
 
+    function __construct(){
+        $this->router = new \Panther\Router\Router;
+    }
+
     public function register($entity){
         $this->entities[] = $entity;
     }
@@ -13,10 +17,10 @@ class App {
     public function run(){
         for ($i=0; $i < count($this->entities); $i++) { 
             $entity = $this->entities[$i];
-            if(isset($entity['default']) && $entity['default']){
-                var_dump($entity['class']);
-            }
+            $class = new $entity['class']();
+            $class->routes($this->router);
         }
+        $this->router->run($_SERVER['REQUEST_URI']);
     }
 
 }

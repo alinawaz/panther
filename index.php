@@ -2,9 +2,8 @@
 
 require 'vendor/autoload.php';
 
-$app = new App();
+$app = new \Panther\App();
 $app->register([
-    'default' => true,
     'class' => App\Entities\HelloEntity::class
 ]);
 $app->run();
