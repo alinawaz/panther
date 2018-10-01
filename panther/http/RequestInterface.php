@@ -8,4 +8,6 @@ interface RequestInterface {
 
 	public function set($name, $value);
 
+	public function except($nameOrArray);
+
 }
