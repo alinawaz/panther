@@ -20,7 +20,7 @@ class App {
             $class = new $entity['class']();
             $class->routes($this->router);
         }
-        $this->router->run($_SERVER['REQUEST_URI']);
+        echo $this->router->run($_SERVER['REQUEST_URI']);
     }
 
 }
