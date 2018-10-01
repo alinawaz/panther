@@ -1,0 +1,28 @@
+{
+    "name": "pather/pather",
+    "description": "PHP framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ali Nawaz Hiraj",
+            "email": "alinawazsolid@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Panther\\": "panther",
+            "App\\": "app"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.0"
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ]
+    }
+}
