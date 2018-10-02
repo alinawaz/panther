@@ -8,4 +8,8 @@ class Entity {
 		return json_encode($data);
 	}
 
+	public function view($view_file, $data=[]){
+		
+	}
+
 }
