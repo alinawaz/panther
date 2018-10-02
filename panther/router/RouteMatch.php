@@ -5,6 +5,7 @@ namespace Panther\Router;
 class RouteMatch implements RouteMatchInterface {
 	
 	public static function match($url, $route, $method) {
+
 		// Slicing up
 		$url_slices = explode("/", $url);
 		$route_slices = explode("/", $route['url']);

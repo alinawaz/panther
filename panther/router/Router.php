@@ -12,23 +12,33 @@ class Router implements RouterInterface {
             $request = $router_request->getUrl();
             $request = str_replace($config['base_url'], '', $request);
         }
+        $matched = false;
 		for ($i=0; $i < count($this->routes); $i++) { 
 			$route = $this->routes[$i];
 			$result = RouteMatch::match($request, $route, $_SERVER['REQUEST_METHOD']);
 			if($result['match']){
+                $matched = true;
 				$class = new $route['class']();
 				$method_name = $route['callable'];
 				if($route['type'] == 'function'){					
-					if(count($_POST)>0){
+					if(count($_POST)>0 && count($result['params']) == 0){
 						$request = new \Panther\Http\Request;
 						foreach($_POST as $key => $value){
 							$request->$key = $value;
 						}
 						return $class->$method_name($request);
 					}
-					if(count($result['params'])>0){
+					if(count($result['params'])>0 && count($_POST) == 0){
 						return $class->$method_name(...$result['params']);
-					}
+                    }
+                    if(count($_POST)>0 && count($result['params']) > 0){
+                        $request = new \Panther\Http\Request;
+						foreach($_POST as $key => $value){
+							$request->$key = $value;
+                        }
+                        $result['params'][] = $request;
+						return $class->$method_name(...$result['params']);
+                    }
 					return $class->$method_name();
 				}else if($route['type'] == 'closure'){					
 					if(count($result['params'])>0){
@@ -37,7 +47,10 @@ class Router implements RouterInterface {
 					return $method_name();
 				}				
 			}
-		}
+        }
+        if(!$matched){
+            echo "404";
+        }
 	}
 
     public function get($url, $callable){    	

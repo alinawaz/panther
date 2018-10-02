@@ -17,8 +17,16 @@ class HelloEntity extends Entity {
 	    		"message" => "Calling number ".$number." ..."
 	    	]);
 		});
-		$router->post('/save', 'saveName');
-	}
+        $router->post('/save', 'saveName');
+        $router->post('/test_post/:name/:age', 'test_post');
+    }
+    
+    public function test_post($name, $age, Request $request){
+        return $this->toJson([
+    		"status" => "OK",
+    		"message" => "Name {".$name."}, Age {".$age."} & Status{".$request->status."} Saved Successfully"
+    	]);
+    }
 
 	public function saveName(Request $request){
 		return $this->toJson([
