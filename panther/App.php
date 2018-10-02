@@ -5,9 +5,11 @@ namespace Panther;
 class App {
 
     private $entities = [];
+    private $config = [];
 
-    function __construct(){
-        $this->router = new \Panther\Router\Router;
+    function __construct($config = []){
+        $this->router = resolve('router')->from('router');
+        $this->config = $config;
     }
 
     public function register($entity){
@@ -20,7 +22,8 @@ class App {
             $class = new $entity['class']();
             $class->routes($this->router);
         }
-        echo $this->router->run($_SERVER['REQUEST_URI']);
+        $request_object = resolve('request')->from('router', $_SERVER);
+        echo $this->router->run($request_object, $this->config);
     }
 
 }

@@ -6,7 +6,12 @@ class Router implements RouterInterface {
 
 	private $routes = [];
 
-	public function run($request){
+	public function run($router_request, $config){
+        $request = $router_request->getUri();
+        if(isset($config['base_url']) && $config['base_url'] != ''){
+            $request = $router_request->getUrl();
+            $request = str_replace($config['base_url'], '', $request);
+        }
 		for ($i=0; $i < count($this->routes); $i++) { 
 			$route = $this->routes[$i];
 			$result = RouteMatch::match($request, $route, $_SERVER['REQUEST_METHOD']);
