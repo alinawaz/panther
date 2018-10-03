@@ -12,10 +12,10 @@ class RouteMatch implements RouteMatchInterface {
 
 		// Slicing up
 		$url_slices = explode("/", $url);
-		$route_slices = explode("/", $route['url']);
+		$route_slices = explode("/", $route->getUrl());
 
 		// Method Match
-		if($method != $route['method']){
+		if($method != $route->getMethod()){
 			$return->matched = false;
 			$return->message = "Invalid Request Method ".$method;
 			return $return;

@@ -30,13 +30,13 @@ final class RouterTest extends TestCase
     /**
      * @dataProvider routeRunProvider
      */
-    public function testRunRoutes($route_request, $config){
+    public function testRunRoutes($request, $config){
 
-        $request = $route_request->getUri();
+        $requestUrl = $request->getUri();
         
-        if(isset($config['base_url']) && $config['base_url'] != ''){
-            $request = $route_request->getUrl();
-            $request = str_replace($config['base_url'], '', $request);
+        if($config->has('base_url')){
+            $requestUrl = $request->getUrl();
+            $requestUrl = str_replace($config->get('base_url'), '', $requestUrl);
         }
 
         $matched = false;
@@ -45,7 +45,7 @@ final class RouterTest extends TestCase
             
             $route = $this->routes[$i];
             
-            $response = \Panther\Router\RouteMatch::match($request, $route, $route_request->getMethod());
+            $response = \Panther\Router\RouteMatch::match($requestUrl, $route, $request->getMethod());
             
             if($response->matched){
 
@@ -55,26 +55,26 @@ final class RouterTest extends TestCase
                 
 				if($route['type'] == 'function'){	
 
-					if($route_request->hasPostData() && !$response->hasParams){
-						$request = new \Panther\Http\Request;
+					if($request->hasPostData() && !$response->hasParams){
+						$requestUrl = new \Panther\Http\Request;
 						foreach($_POST as $key => $value){
-							$request->$key = $value;
+							$requestUrl->$key = $value;
 						}
-                        $test_string = $class->$method_name($request);
+                        $test_string = $class->$method_name($requestUrl);
                         $this->assertSame('works', $test_string);
                     }
                     
-					if(!$route_request->hasPostData() && $response->hasParams){
+					if(!$request->hasPostData() && $response->hasParams){
                         $test_string = $class->$method_name(...$response->params);
                         $this->assertSame('works', $test_string);
                     }
 
-                    if($route_request->hasPostData() && $response->hasParams){
-                        $request = new \Panther\Http\Request;
-						foreach($route_request->getPostData() as $key => $value){
-							$request->$key = $value;
+                    if($request->hasPostData() && $response->hasParams){
+                        $http_request = new \Panther\Http\Request;
+						foreach($request->getPostData() as $key => $value){
+							$http_request->$key = $value;
                         }
-                        $response->params[] = $request;
+                        $response->params[] = $http_request;
                         $test_string = $class->$method_name(...$response->params);
                         $this->assertSame('works', $test_string);
                     }
@@ -102,19 +102,21 @@ final class RouterTest extends TestCase
 
     public function routeRunProvider()
     {
-        // Creating fake configs
-        $fake_config = [];
-        $fake_config['base_url'] = 'http://localhost:8080/panther';
+        // Creating new config
+        $config = new \Panther\Core\Config([
+            'base_url' => 'http://localhost:8080/panther'
+        ]);
 
-        // Creating fake GET request for /test url
-        $route_request = new \Panther\Router\RouteRequest;
-        $fake_request = $route_request->mock('GET','/test');
-        $request1 = [$fake_request, $fake_config];
+        // Creating new router request
+        $request = new \Panther\Router\RouteRequest;
 
-        // Creating fake GET request for /test/id url
-        $route_request = new \Panther\Router\RouteRequest;
-        $fake_request = $route_request->mock('GET','/test/3');
-        $request2 = [$fake_request, $fake_config];
+        // Faking GET request for /test url        
+        $fake_request = $request->mock('GET','/test');
+        $request1 = [$fake_request, $config];
+
+        // Faking GET request for /test/:id url
+        $fake_request = $request->mock('GET','/test/3');
+        $request2 = [$fake_request, $config];
 
         // Returning record
         return [$request1, $request2];

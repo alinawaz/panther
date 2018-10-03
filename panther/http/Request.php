@@ -6,6 +6,13 @@ class Request implements RequestInterface {
 	
 	private $variables = [];
 
+	function __construct($post_variables = []){
+		$this->variables = $post_variables;
+		foreach($post_variables as $key => $value){
+			$this->$key = $value;
+		}
+	}
+
 	public function get($name){
 		return $this->variables[$name];
 	}

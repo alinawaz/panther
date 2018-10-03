@@ -9,7 +9,8 @@ class App {
 
     function __construct($config = []){
         $this->router = resolve('router')->from('router');
-        $this->config = $config;
+        $this->config = new \Panther\Core\Config($config);
+        $global_config = $this->config;
     }
 
     public function register($entity){

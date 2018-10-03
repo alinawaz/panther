@@ -6,46 +6,41 @@ class Router implements RouterInterface {
 
 	private $routes = [];
 
-	public function run($router_request, $config){
-        $request = $router_request->getUri();
-        if(isset($config['base_url']) && $config['base_url'] != ''){
-            $request = $router_request->getUrl();
-            $request = str_replace($config['base_url'], '', $request);
+	public function run($request, $config){
+
+        $requestString = $request->getUri();
+        
+        if($config->has('base_url')){
+            $requestString = $request->getUrl();
+            $requestString = str_replace($config->get('base_url'), '', $requestString);
         }
+
         $matched = false;
-		for ($i=0; $i < count($this->routes); $i++) { 
-			$route = $this->routes[$i];
-			$result = RouteMatch::match($request, $route, $_SERVER['REQUEST_METHOD']);
-			if($result['match']){
+        
+        foreach($this->routes as $route){
+
+			$response = RouteMatch::match($requestString, $route, $_SERVER['REQUEST_METHOD']);
+            
+            if($response->matched){
+
                 $matched = true;
-				$class = new $route['class']();
-				$method_name = $route['callable'];
-				if($route['type'] == 'function'){					
-					if(count($_POST)>0 && count($result['params']) == 0){
-						$request = new \Panther\Http\Request;
-						foreach($_POST as $key => $value){
-							$request->$key = $value;
-						}
-						return $class->$method_name($request);
-					}
-					if(count($result['params'])>0 && count($_POST) == 0){
-						return $class->$method_name(...$result['params']);
-                    }
-                    if(count($_POST)>0 && count($result['params']) > 0){
-                        $request = new \Panther\Http\Request;
-						foreach($_POST as $key => $value){
-							$request->$key = $value;
-                        }
-                        $result['params'][] = $request;
-						return $class->$method_name(...$result['params']);
-                    }
-					return $class->$method_name();
-				}else if($route['type'] == 'closure'){					
-					if(count($result['params'])>0){
-						return $method_name(...$result['params']);
-					}
-					return $method_name();
-				}				
+
+                if($request->hasPostData() && !$response->hasParams){
+                    $http_request = new \Panther\Http\Request($_POST);
+                    return $route->invoke($http_request);
+                }
+
+                if(!$request->hasPostData() && $response->hasParams){
+                    return $route->invoke(...$response->params);
+                }
+
+                if($request->hasPostData() && $response->hasParams){
+                    $http_request = new \Panther\Http\Request($_POST);
+                    $response->params[] = $http_request;
+                    return $route->invoke(...$response->params);
+                }
+
+                return $route->invoke();				
 			}
         }
         if(!$matched){
@@ -57,21 +52,21 @@ class Router implements RouterInterface {
     	$trace = debug_backtrace();
     	$class = $trace[1]['class'];
     	if($callable instanceof Closure){
-    		$this->routes[] = [
+    		$this->routes[] = new \Panther\Router\Route([
     			'method' => 'GET',
 	    		'url' => $url,
 	    		'class' => $class,
 	    		'type' => 'closure',
 	    		'callable' => $callable
-	    	];
+	    	]);
     	}else{
-    		$this->routes[] = [
+    		$this->routes[] = new \Panther\Router\Route([
     			'method' => 'GET',
 	    		'url' => $url,
 	    		'class' => $class,
 	    		'type' => 'function',
 	    		'callable' => $callable
-	    	];
+	    	]);
     	}    	
     }
 
