@@ -12,7 +12,8 @@
     "autoload": {
         "psr-4": {
             "Panther\\": "panther",
-            "App\\": "app"
+            "App\\": "app",
+            "Test\\": "tests"
         }
     },
     "minimum-stability": "dev",
@@ -22,7 +23,7 @@
     },
     "scripts": {
         "test": [
-            "phpunit"
+            "phpunit tests"
         ]
     }
 }
