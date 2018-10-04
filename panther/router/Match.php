@@ -2,22 +2,24 @@
 
 namespace Panther\Router;
 
-class RouteMatch implements RouteMatchInterface {
+use \Panther\Router\Interfaces\MatchInterface;
+
+class Match implements MatchInterface {
 	
-	public static function match($url, $route, $method) {
+	public static function match($route, $request) {
 
 		// Creating empty object to be returned
 		$return = new \StdClass;
 		$return->hasParams = false;
 
 		// Slicing up
-		$url_slices = explode("/", $url);
+		$url_slices = explode("/", $request->request_string);
 		$route_slices = explode("/", $route->getUrl());
 
 		// Method Match
-		if($method != $route->getMethod()){
+		if($request->getMethod() != $route->getMethod()){
 			$return->matched = false;
-			$return->message = "Invalid Request Method ".$method;
+			$return->message = "Invalid Request Method ".$request->getMethod();
 			return $return;
 		}
 

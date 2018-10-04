@@ -1,6 +1,6 @@
 <?php
 
-namespace Panther\Router;
+namespace Panther\Router\Interfaces;
 
 interface RouteInterface {
 

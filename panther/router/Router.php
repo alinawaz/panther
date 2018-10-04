@@ -2,94 +2,68 @@
 
 namespace Panther\Router;
 
+use \Panther\Router\Interfaces\RouterInterface;
+
 class Router implements RouterInterface {
 
-	private $routes = [];
+    private $collection;
+    
+    function __construct(){
+        $this->collection = new Collection;
+    }
 
 	public function run($request, $config){
 
-        $requestString = $request->getUri();
-        
+        $request->request_string = $request->getUri();        
         if($config->has('base_url')){
-            $requestString = $request->getUrl();
-            $requestString = str_replace($config->get('base_url'), '', $requestString);
+            $request->request_string = $request->getUrl();
+            $request->request_string = str_replace($config->get('base_url'), '', $request->request_string);
         }
-
-        $matched = false;
         
-        foreach($this->routes as $route){
+        return $this->collection->traverse($request, function($request, $route, $response) {
 
-			$response = RouteMatch::match($requestString, $route, $_SERVER['REQUEST_METHOD']);
+            // POST
+            if($request->hasPostData() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($_POST);
+                return $route->invoke($http_request);
+            }
+            // GET with params
+            if(!$request->hasPostData() && $response->hasParams){
+                return $route->invoke($response->params);
+            }
+            // POST with params
+            if($request->hasPostData() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($_POST);
+                $response->params[] = $http_request;
+                return $route->invoke($response->params);
+            }
+            // GET
+            return $route->invoke();
             
-            if($response->matched){
+        });
 
-                $matched = true;
-
-                if($request->hasPostData() && !$response->hasParams){
-                    $http_request = new \Panther\Http\Request($_POST);
-                    return $route->invoke($http_request);
-                }
-
-                if(!$request->hasPostData() && $response->hasParams){
-                    return $route->invoke(...$response->params);
-                }
-
-                if($request->hasPostData() && $response->hasParams){
-                    $http_request = new \Panther\Http\Request($_POST);
-                    $response->params[] = $http_request;
-                    return $route->invoke(...$response->params);
-                }
-
-                return $route->invoke();				
-			}
-        }
-        if(!$matched){
-            echo "404";
-        }
-	}
+    }
+    
+    private function make($url, $method, $class, $callable){
+        $this->collection->push(new \Panther\Router\Route([
+            'method' => $method,
+            'url' => $url,
+            'class' => $class,
+            'type' => ($callable instanceof Closure ? 'closure' : 'function'),
+            'callable' => $callable
+        ]));
+    }
 
     public function get($url, $callable){    	
     	$trace = debug_backtrace();
-    	$class = $trace[1]['class'];
-    	if($callable instanceof Closure){
-    		$this->routes[] = new \Panther\Router\Route([
-    			'method' => 'GET',
-	    		'url' => $url,
-	    		'class' => $class,
-	    		'type' => 'closure',
-	    		'callable' => $callable
-	    	]);
-    	}else{
-    		$this->routes[] = new \Panther\Router\Route([
-    			'method' => 'GET',
-	    		'url' => $url,
-	    		'class' => $class,
-	    		'type' => 'function',
-	    		'callable' => $callable
-	    	]);
-    	}    	
+        $class = $trace[1]['class'];
+        $this->make($url, 'GET', $class, $callable);  	
     }
 
     public function post($url, $callable){    	
     	$trace = debug_backtrace();
-    	$class = $trace[1]['class'];
-    	if($callable instanceof Closure){
-    		$this->routes[] = [
-    			'method' => 'POST',
-	    		'url' => $url,
-	    		'class' => $class,
-	    		'type' => 'closure',
-	    		'callable' => $callable
-	    	];
-    	}else{
-    		$this->routes[] = [
-    			'method' => 'POST',
-	    		'url' => $url,
-	    		'class' => $class,
-	    		'type' => 'function',
-	    		'callable' => $callable
-	    	];
-    	}    	
+        $class = $trace[1]['class'];
+        $this->make($url, 'POST', $class, $callable);     	
     }
 
 }

@@ -14,9 +14,9 @@ class Importer implements ImporterInterface {
         if($package == 'router'){
             if($this->class == 'request'){
                 if($constructor != null){
-                    return new \Panther\Router\RouteRequest($constructor);
+                    return new \Panther\Router\Request($constructor);
                 }
-                return new \Panther\Router\RouteRequest;
+                return new \Panther\Router\Request;
             }
             if($this->class == 'router'){
                 if($constructor != null){

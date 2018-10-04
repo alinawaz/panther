@@ -1,8 +1,8 @@
 <?php
 
-namespace Panther\Router;
+namespace Panther\Router\Interfaces;
 
-interface RouteRequestInterface {
+interface RequestInterface {
     
     public function mock($method, $url);
     

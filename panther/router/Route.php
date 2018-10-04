@@ -2,6 +2,8 @@
 
 namespace Panther\Router;
 
+use \Panther\Router\Interfaces\RouteInterface;
+
 class Route implements RouteInterface {
 
     private $route = [

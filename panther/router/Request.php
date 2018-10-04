@@ -2,9 +2,12 @@
 
 namespace Panther\Router;
 
-class RouteRequest implements RouteRequestInterface {
+use \Panther\Router\Interfaces\RequestInterface;
+
+class Request implements RequestInterface {
     
     private $request;
+    public $request_string = '';
 
 	function __construct($request_object=null){
         $this->request = $request_object;
