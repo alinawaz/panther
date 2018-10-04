@@ -13,14 +13,20 @@ class App {
         $global_config = $this->config;
     }
 
-    public function register($entity){
+    public function register($entity_name, $alias = ''){
+        if($alias=='')
+        {
+            $alias = $entity_name;
+        }
+        $entity_class = "App\\Entities\\".$entity_name;
+        $entity = new \Panther\Entity\Entity($alias, new $entity_class());
         $this->entities[] = $entity;
     }
 
     public function run(){
         for ($i=0; $i < count($this->entities); $i++) { 
             $entity = $this->entities[$i];
-            $class = new $entity['class']();
+            $class = $entity->get();
             $class->routes($this->router);
         }
         $request_object = resolve('request')->from('router', $_SERVER);

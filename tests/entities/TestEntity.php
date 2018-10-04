@@ -2,10 +2,10 @@
 
 namespace Test\Entities;
 
-use Panther\Entity\Entity;
+use Panther\Entity\EntityController;
 use Panther\Http\Request;
 
-class TestEntity extends Entity {
+class TestEntity extends EntityController {
     
     public function test_get(){
         return 'works';

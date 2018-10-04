@@ -1,19 +1,19 @@
 <?php
 
-namespace Panther\Router;
+namespace Panther\Entity;
 
-use \Panther\Router\Interfaces\CollectionInterface;
+//use \Panther\Router\Interfaces\CollectionInterface;
 
-class Collection implements CollectionInterface {
+class Collection  {
 
     private $collection;
 
-    function construct($route_array = []){
-        $this->$collection = $route_array;
+    function construct($entity_array = []){
+        $this->$collection = $entity_array;
     }
 
-    public function push($route){
-        $this->collection[] = $route;
+    public function push($entity){
+        $this->collection[] = $entity;
     }
 
     public function pop(){
@@ -21,7 +21,7 @@ class Collection implements CollectionInterface {
     }
 
     public function traverse($request, $callable){
-        foreach($this->collection as $route){
+        foreach($this->collection as $entity){
             $response = Match::match($route, $request);
             if($response->matched){
                 return $callable($request, $route, $response);

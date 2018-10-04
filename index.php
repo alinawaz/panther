@@ -17,9 +17,12 @@ $app = new \Panther\App(['base_url' => 'http://localhost:8080/panther']);
     All entity classes needs to be registered here
     Panther will take care of migrations, seeders, routes & models for you!
 */
-$app->register([
-    'class' => App\Entities\HelloEntity::class
-]);
+
+// $app->register([
+//     'class' => App\Entities\HelloEntity::class
+// ]);
+
+$app->register('HelloEntity');
 
 /*
     Running the application

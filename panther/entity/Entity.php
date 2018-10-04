@@ -3,13 +3,17 @@
 namespace Panther\Entity;
 
 class Entity {
-	
-	public function toJson($data){
-		return json_encode($data);
-	}
+    
+    private $name;
+    private $class;
+    
+    function __construct($name, $class){
+        $this->name = $name;
+        $this->class = $class;
+    }
 
-	public function view($view_file, $data=[]){
-		
-	}
+    public function get(){
+        return $this->class;
+    }
 
 }

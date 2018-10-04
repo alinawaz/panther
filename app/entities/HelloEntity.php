@@ -2,10 +2,10 @@
 
 namespace App\Entities;
 
-use Panther\Entity\Entity;
+use Panther\Entity\EntityController;
 use Panther\Http\Request;
 
-class HelloEntity extends Entity {
+class HelloEntity extends EntityController {
 
 
 	public function routes($router){
