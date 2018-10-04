@@ -23,10 +23,16 @@ class Collection implements CollectionInterface {
     public function traverse($request, $callable){
         foreach($this->collection as $route){
             $response = Match::match($route, $request);
+            // echo "=============\n";
+            // var_dump($request);
+            // var_dump($response);            
+            // echo $callable($request, $route, $response)."\n";
+            // echo "==============\n";
             if($response->matched){
                 return $callable($request, $route, $response);
             }
         }
+        return '404';
     }
 
 }

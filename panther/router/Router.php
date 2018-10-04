@@ -14,31 +14,33 @@ class Router implements RouterInterface {
 
 	public function run($request, $config){
 
-        $request->request_string = $request->getUri();        
+        $request->url = $request->getUri();        
         if($config->has('base_url')){
-            $request->request_string = $request->getUrl();
-            $request->request_string = str_replace($config->get('base_url'), '', $request->request_string);
+            $request->url = $request->getUrl();
+            $request->url = str_replace($config->get('base_url'), '', $request->url);
         }
         
         return $this->collection->traverse($request, function($request, $route, $response) {
 
             // POST
-            if($request->hasPostData() && !$response->hasParams){
-                $http_request = new \Panther\Http\Request($_POST);
+            if($request->isPost() && $request->hasPostData() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
                 return $route->invoke($http_request);
             }
             // GET with params
-            if(!$request->hasPostData() && $response->hasParams){
+            if($request->isGet() && !$request->hasPostData() && $response->hasParams){
                 return $route->invoke($response->params);
             }
             // POST with params
-            if($request->hasPostData() && $response->hasParams){
-                $http_request = new \Panther\Http\Request($_POST);
+            if($request->isPost() && $request->hasPostData() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
                 $response->params[] = $http_request;
                 return $route->invoke($response->params);
             }
             // GET
-            return $route->invoke();
+            if($request->isGet()){
+                return $route->invoke();
+            }
             
         });
 
@@ -64,6 +66,18 @@ class Router implements RouterInterface {
     	$trace = debug_backtrace();
         $class = $trace[1]['class'];
         $this->make($url, 'POST', $class, $callable);     	
+    }
+
+    public function put($url, $callable){    	
+    	$trace = debug_backtrace();
+        $class = $trace[1]['class'];
+        $this->make($url, 'PUT', $class, $callable);     	
+    }
+
+    public function delete($url, $callable){    	
+    	$trace = debug_backtrace();
+        $class = $trace[1]['class'];
+        $this->make($url, 'DELETE', $class, $callable);     	
     }
 
 }

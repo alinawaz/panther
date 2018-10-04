@@ -11,8 +11,16 @@ class TestEntity extends Entity {
         return 'works';
     }
 
-    public function test_get_id(){
-        return 'works';
+    public function test_get_param($char){
+        return 'work'.$char; // work+s = works
+    }
+
+    public function test_post($request){
+        return $request->string; // works
+    }
+
+    public function test_post_param($char, $request){
+        return $request->string.$char; // work+s = works
     }
     
 }

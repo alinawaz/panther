@@ -7,21 +7,35 @@ use \Panther\Router\Interfaces\RequestInterface;
 class Request implements RequestInterface {
     
     private $request;
-    public $request_string = '';
+    public $url = '';
 
-	function __construct($request_object=null){
+	function __construct($request_object=null, $post_data=false){
         $this->request = $request_object;
-        $this->request['POST_DATA'] = $_POST;
+        if(!$post_data)
+            $this->request['POST_DATA'] = $_POST;
     }
 
-    public function mock($method, $url){
+    public function mock($method, $url, $data = []){
         $fake_request = [];
         $fake_request['REQUEST_SCHEME'] = 'http';
         $fake_request['SERVER_PORT'] = '8080';
         $fake_request['SERVER_NAME'] = 'localhost';
         $fake_request['REQUEST_URI'] = '/panther'.$url;
         $fake_request['REQUEST_METHOD'] = $method;
-        return new RouteRequest($fake_request);
+        $fake_request['POST_DATA'] = $data;
+        return new Request($fake_request, true);
+    }
+
+    public function isPost(){
+        if($this->getMethod() == 'POST')
+            return true;
+        return false;
+    }
+
+    public function isGet(){
+        if($this->getMethod() == 'GET')
+            return true;
+        return false;
     }
 
     public function getMethod(){

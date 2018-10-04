@@ -4,22 +4,46 @@ use PHPUnit\Framework\TestCase;
 final class RouterTest extends TestCase
 {
 
-    private $routes = [
-        [
+    private $collection;
+
+    public function setUp()
+    {
+
+        $this->collection = new \Panther\Router\Collection;
+
+        $this->collection->push(new \Panther\Router\Route([
             'method' => 'GET',
             'url' => '/test',
             'class' => 'Test\Entities\TestEntity',
             'type' => 'function',
             'callable' => 'test_get'
-        ],
-        [
+        ]));
+
+        $this->collection->push(new \Panther\Router\Route([
             'method' => 'GET',
-            'url' => '/test/:id',
+            'url' => '/test/:char',
             'class' => 'Test\Entities\TestEntity',
             'type' => 'function',
-            'callable' => 'test_get_id'
-        ]
-    ];
+            'callable' => 'test_get_param'
+        ]));
+
+        $this->collection->push(new \Panther\Router\Route([
+            'method' => 'POST',
+            'url' => '/test',
+            'class' => 'Test\Entities\TestEntity',
+            'type' => 'function',
+            'callable' => 'test_post'
+        ]));
+
+        $this->collection->push(new \Panther\Router\Route([
+            'method' => 'POST',
+            'url' => '/test/:char',
+            'class' => 'Test\Entities\TestEntity',
+            'type' => 'function',
+            'callable' => 'test_post_param'
+        ]));
+
+    }
 
     public function testCanCreateRouter()
     {
@@ -32,72 +56,39 @@ final class RouterTest extends TestCase
      */
     public function testRunRoutes($request, $config){
 
-        $requestUrl = $request->getUri();
+        $request->url = $request->getUri();
         
         if($config->has('base_url')){
-            $requestUrl = $request->getUrl();
-            $requestUrl = str_replace($config->get('base_url'), '', $requestUrl);
+            $request->url = $request->getUrl();
+            $request->url = str_replace($config->get('base_url'), '', $request->url);
         }
 
-        $matched = false;
+		$test = $this->collection->traverse($request, function($request, $route, $response){
 
-		for ($i=0; $i < count($this->routes); $i++) { 
+            // POST
+            if($request->isPost() && $request->hasPostData() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                return $route->invoke($http_request);
+            }
+            // GET with params
+            if($request->isGet() && !$request->hasPostData() && $response->hasParams){
+                return $route->invoke($response->params);
+            }
+            // POST with params
+            if($request->isPost() && $request->hasPostData() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                $response->params[] = $http_request;
+                return $route->invoke($response->params);
+            }
+            // GET
+            if($request->isGet()){
+                return $route->invoke();
+            }
             
-            $route = $this->routes[$i];
-            
-            $response = \Panther\Router\RouteMatch::match($requestUrl, $route, $request->getMethod());
-            
-            if($response->matched){
+        });
 
-                $matched = true;
-				$class = new $route['class']();
-                $method_name = $route['callable'];
-                
-				if($route['type'] == 'function'){	
+        $this->assertSame('works', $test);
 
-					if($request->hasPostData() && !$response->hasParams){
-						$requestUrl = new \Panther\Http\Request;
-						foreach($_POST as $key => $value){
-							$requestUrl->$key = $value;
-						}
-                        $test_string = $class->$method_name($requestUrl);
-                        $this->assertSame('works', $test_string);
-                    }
-                    
-					if(!$request->hasPostData() && $response->hasParams){
-                        $test_string = $class->$method_name(...$response->params);
-                        $this->assertSame('works', $test_string);
-                    }
-
-                    if($request->hasPostData() && $response->hasParams){
-                        $http_request = new \Panther\Http\Request;
-						foreach($request->getPostData() as $key => $value){
-							$http_request->$key = $value;
-                        }
-                        $response->params[] = $http_request;
-                        $test_string = $class->$method_name(...$response->params);
-                        $this->assertSame('works', $test_string);
-                    }
-
-                    $test_string = $class->$method_name();
-                    $this->assertSame('works', $test_string);
-
-				}else if($route['type'] == 'closure'){
-
-					if($response->hasParams){
-                        $test_string = $method_name(...$response->params);
-                        $this->assertSame('works', $test_string);
-					}
-                    $test_string = $method_name();
-                    $this->assertSame('works', $test_string);
-
-				}				
-			}
-        }
-
-        if(!$matched){
-            $this->assertSame('works', '404');
-        }
     }
 
     public function routeRunProvider()
@@ -108,18 +99,26 @@ final class RouterTest extends TestCase
         ]);
 
         // Creating new router request
-        $request = new \Panther\Router\RouteRequest;
+        $request = new \Panther\Router\Request;
 
-        // Faking GET request for /test url        
+        // Faking GET request {/test}      
         $fake_request = $request->mock('GET','/test');
         $request1 = [$fake_request, $config];
 
-        // Faking GET request for /test/:id url
-        $fake_request = $request->mock('GET','/test/3');
+        // Faking GET request {/test/:id} with params
+        $fake_request = $request->mock('GET','/test/s');
         $request2 = [$fake_request, $config];
 
+        // Faking POST request {/test}
+        $fake_request = $request->mock('POST','/test',['string' => 'works']);
+        $request3 = [$fake_request, $config];
+
+        // Faking POST request {/test/:id} with params
+        $fake_request = $request->mock('POST','/test/s',['string' => 'work']);
+        $request4 = [$fake_request, $config];
+
         // Returning record
-        return [$request1, $request2];
+        return [$request1, $request2, $request3, $request4];
     }
 
 }

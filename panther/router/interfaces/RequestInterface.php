@@ -16,4 +16,8 @@ interface RequestInterface {
 
     public function getUri();
 
+    public function isPost();
+
+    public function isGet();
+
 }

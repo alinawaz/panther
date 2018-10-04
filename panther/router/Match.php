@@ -13,7 +13,7 @@ class Match implements MatchInterface {
 		$return->hasParams = false;
 
 		// Slicing up
-		$url_slices = explode("/", $request->request_string);
+		$url_slices = explode("/", $request->url);
 		$route_slices = explode("/", $route->getUrl());
 
 		// Method Match
