@@ -25,8 +25,7 @@ class App {
     public function run(){
         $router = &$this->router;
         $this->collection->traverse(function($entity) use ($router){
-            $class = $entity->get();
-            $class->routes($router);
+            $entity->get()->routes($router);
         });
         $request = resolve('request')->from('router', $_SERVER);
         echo $this->router->run($request, $this->config);
