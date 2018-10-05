@@ -22,24 +22,23 @@ class Router implements RouterInterface {
         
         return $this->collection->traverse($request, function($request, $route, $response) {
 
-            // POST
-            if($request->isPost() && $request->hasPostData() && !$response->hasParams){
+            // GET Request
+            if($request->isGet() && !$response->hasParams){
+                return $route->invoke();
+            }
+            if($request->isGet() && $response->hasParams){
+                return $route->invoke($response->params);
+            }  
+
+            // POST Request
+            if($request->isPost() && !$response->hasParams){
                 $http_request = new \Panther\Http\Request($request->getPostData());
                 return $route->invoke($http_request);
             }
-            // GET with params
-            if($request->isGet() && !$request->hasPostData() && $response->hasParams){
-                return $route->invoke($response->params);
-            }
-            // POST with params
-            if($request->isPost() && $request->hasPostData() && $response->hasParams){
+            if($request->isPost() && $response->hasParams){
                 $http_request = new \Panther\Http\Request($request->getPostData());
                 $response->params[] = $http_request;
                 return $route->invoke($response->params);
-            }
-            // GET
-            if($request->isGet()){
-                return $route->invoke();
             }
             
         });
