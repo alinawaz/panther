@@ -1,6 +1,6 @@
 <?php
 
-namespace Panther\Core;
+namespace Panther\Core\Interfaces;
 
 interface ImporterInterface {
 

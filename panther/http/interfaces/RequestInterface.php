@@ -1,6 +1,6 @@
 <?php
 
-namespace Panther\Http;
+namespace Panther\Http\Interfaces;
 
 interface RequestInterface {
 	

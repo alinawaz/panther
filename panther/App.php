@@ -4,33 +4,32 @@ namespace Panther;
 
 class App {
 
-    private $entities = [];
-    private $config = [];
+    private $collection;
+    private $config;
+    private $router;
 
     function __construct($config = []){
         $this->router = resolve('router')->from('router');
         $this->config = new \Panther\Core\Config($config);
         $global_config = $this->config;
+        $this->collection = new \Panther\Entity\Collection;
     }
 
     public function register($entity_name, $alias = ''){
-        if($alias=='')
-        {
-            $alias = $entity_name;
-        }
+        $alias = ($alias==''?$entity_name:$alias);        
         $entity_class = "App\\Entities\\".$entity_name;
         $entity = new \Panther\Entity\Entity($alias, new $entity_class());
-        $this->entities[] = $entity;
+        $this->collection->push($entity);
     }
 
     public function run(){
-        for ($i=0; $i < count($this->entities); $i++) { 
-            $entity = $this->entities[$i];
+        $router = &$this->router;
+        $this->collection->traverse(function($entity) use ($router){
             $class = $entity->get();
-            $class->routes($this->router);
-        }
-        $request_object = resolve('request')->from('router', $_SERVER);
-        echo $this->router->run($request_object, $this->config);
+            $class->routes($router);
+        });
+        $request = resolve('request')->from('router', $_SERVER);
+        echo $this->router->run($request, $this->config);
     }
 
 }

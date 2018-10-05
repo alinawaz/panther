@@ -2,7 +2,9 @@
 
 namespace Panther\Entity;
 
-class Entity {
+use \Panther\Entity\Interfaces\EntityInterface;
+
+class Entity implements EntityInterface {
     
     private $name;
     private $class;

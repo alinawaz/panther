@@ -2,9 +2,9 @@
 
 namespace Panther\Entity;
 
-//use \Panther\Router\Interfaces\CollectionInterface;
+use \Panther\Entity\Interfaces\CollectionInterface;
 
-class Collection  {
+class Collection implements CollectionInterface {
 
     private $collection;
 
@@ -20,14 +20,10 @@ class Collection  {
         unset($this->collection[count($this->collection)-1]);
     }
 
-    public function traverse($request, $callable){
+    public function traverse($callable){
         foreach($this->collection as $entity){
-            $response = Match::match($route, $request);
-            if($response->matched){
-                return $callable($request, $route, $response);
-            }
+            $callable($entity);
         }
-        return '404';
     }
 
 }

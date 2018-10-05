@@ -2,6 +2,8 @@
 
 namespace Panther\Core;
 
+use Panther\Core\Interfaces\ImporterInterface;
+
 class Importer implements ImporterInterface {
 
     private $class;

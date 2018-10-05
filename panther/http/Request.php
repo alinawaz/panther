@@ -2,6 +2,8 @@
 
 namespace Panther\Http;
 
+use Panther\Http\Interfaces\RequestInterface;
+
 class Request implements RequestInterface {
 	
 	private $variables = [];

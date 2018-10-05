@@ -2,6 +2,8 @@
 
 namespace Panther\Core;
 
+use Panther\Core\Interfaces\ConfigInterface;
+
 class Config implements ConfigInterface {
 
     private $config;
