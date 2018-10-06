@@ -40,6 +40,39 @@ class Router implements RouterInterface {
                 $response->params[] = $http_request;
                 return $route->invoke($response->params);
             }
+
+            // PUT Request
+            if($request->isPut() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                return $route->invoke($http_request);
+            }
+            if($request->isPut() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                $response->params[] = $http_request;
+                return $route->invoke($response->params);
+            }
+
+            // PATCH Request
+            if($request->isPatch() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                return $route->invoke($http_request);
+            }
+            if($request->isPatch() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                $response->params[] = $http_request;
+                return $route->invoke($response->params);
+            }
+
+            // DELETE Request
+            if($request->isDelete() && !$response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                return $route->invoke($http_request);
+            }
+            if($request->isDelete() && $response->hasParams){
+                $http_request = new \Panther\Http\Request($request->getPostData());
+                $response->params[] = $http_request;
+                return $route->invoke($response->params);
+            }
             
         });
 
@@ -71,6 +104,12 @@ class Router implements RouterInterface {
     	$trace = debug_backtrace();
         $class = $trace[1]['class'];
         $this->make($url, 'PUT', $class, $callable);     	
+    }
+
+    public function patch($url, $callable){       
+        $trace = debug_backtrace();
+        $class = $trace[1]['class'];
+        $this->make($url, 'PATCH', $class, $callable);        
     }
 
     public function delete($url, $callable){    	

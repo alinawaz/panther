@@ -13,6 +13,32 @@ class Request implements RequestInterface {
         $this->request = $request_object;
         if(!$post_data)
             $this->request['POST_DATA'] = $_POST;
+        if($this->isPut() || $this->isPatch()){
+            $this->request['POST_DATA'] = $this->readPutOrPatchData();
+        }
+    }
+
+    private function readPutOrPatchData(){
+        $put_data = [];
+        $putfp = fopen('php://input', 'r');
+        $putdata = '';
+        while($data = fread($putfp, 1024))
+            $putdata .= $data;
+        fclose($putfp);
+        $data = explode('----------------------------',$putdata);
+        if($data)
+        {
+            foreach($data as $k => $v)
+            {
+                $temp = explode('name="',$v);
+                if(count($temp)>1)
+                {
+                    $temp2 = explode('"',$temp[1]);
+                    $put_data[$temp2[0]] = trim($temp2[1]);
+                }
+            }
+        }
+        return $put_data;
     }
 
     public function mock($method, $url, $data = []){
@@ -28,6 +54,24 @@ class Request implements RequestInterface {
 
     public function isPost(){
         if($this->getMethod() == 'POST')
+            return true;
+        return false;
+    }
+
+    public function isPut(){
+        if($this->getMethod() == 'PUT')
+            return true;
+        return false;
+    }
+
+    public function isPatch(){
+        if($this->getMethod() == 'PATCH')
+            return true;
+        return false;
+    }
+
+    public function isDelete(){
+        if($this->getMethod() == 'DELETE')
             return true;
         return false;
     }
