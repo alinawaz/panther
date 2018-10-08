@@ -106,7 +106,8 @@ class Request implements RequestInterface {
     }
 
     public function getUri(){
-        return $this->request['REQUEST_URI'];
+        $base_path = str_replace("/index.php", "", $this->request['SCRIPT_NAME']);
+        return str_replace($base_path, "", $this->request['REQUEST_URI']);
     }
 
 }

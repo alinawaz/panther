@@ -14,3 +14,10 @@ function config($key=null){
 function resolve($class){
     return new \Panther\Core\Importer($class);
 }
+
+function dd($data){
+    echo "<pre>";
+    var_dump($data);
+    echo "</pre>";
+    exit;
+}

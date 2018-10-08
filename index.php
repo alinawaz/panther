@@ -6,9 +6,8 @@ require 'vendor/autoload.php';
 include_once 'panther/helper.php';
 
 /* New application initialization
-    Constructor takes in configs
-    base_url is used for no virtual server environment */ 
-$app = new \Panther\App(/*['base_url' => 'http://localhost:8080/panther']*/);
+    Constructor takes in configs */ 
+$app = new \Panther\App();
 
 /*  Entities registration
     All entity classes needs to be registered here

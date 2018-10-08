@@ -14,11 +14,7 @@ class Router implements RouterInterface {
 
 	public function run($request, $config){
 
-        $request->url = $request->getUri();        
-        if($config->has('base_url')){
-            $request->url = $request->getUrl();
-            $request->url = str_replace($config->get('base_url'), '', $request->url);
-        }
+        $request->url = $request->getUri();
         
         return $this->collection->traverse($request, function($request, $route, $response) {
 
