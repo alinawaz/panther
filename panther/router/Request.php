@@ -9,12 +9,13 @@ class Request implements RequestInterface {
     private $request;
     public $url = '';
 
-	function __construct($request_object=null, $post_data=false){
+	function __construct($request_object=null, $user_defined_data=false){
         $this->request = $request_object;
-        if(!$post_data)
+        if(!$user_defined_data){
             $this->request['POST_DATA'] = $_POST;
-        if($this->isPut() || $this->isPatch()){
-            $this->request['POST_DATA'] = $this->readPutOrPatchData();
+            if($this->isPut() || $this->isPatch()){
+                $this->request['POST_DATA'] = $this->readPutOrPatchData();
+            }
         }
     }
 
@@ -46,8 +47,9 @@ class Request implements RequestInterface {
         $fake_request['REQUEST_SCHEME'] = 'http';
         $fake_request['SERVER_PORT'] = '8080';
         $fake_request['SERVER_NAME'] = 'localhost';
-        $fake_request['REQUEST_URI'] = '/panther'.$url;
+        $fake_request['REQUEST_URI'] = $url;
         $fake_request['REQUEST_METHOD'] = $method;
+        $fake_request['SCRIPT_NAME'] = '/panther/index.php';
         $fake_request['POST_DATA'] = $data;
         return new Request($fake_request, true);
     }
@@ -83,7 +85,7 @@ class Request implements RequestInterface {
     }
 
     public function getMethod(){
-        return $this->request['REQUEST_METHOD'];
+        return isset($this->request['REQUEST_METHOD']) ? $this->request['REQUEST_METHOD'] : 'GET';
     }
 
     public function hasPostData(){
