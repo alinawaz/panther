@@ -6,14 +6,6 @@ use \Panther\Router\Interfaces\RouteInterface;
 
 class Route implements RouteInterface {
 
-    private $route = [
-        'method' => 'GET',
-        'url' => '/test',
-        'class' => 'Test\Entities\TestEntity',
-        'type' => 'function',
-        'callable' => 'test_get'
-    ];
-
     private $method;
     private $url;
     private $class;
@@ -22,30 +14,12 @@ class Route implements RouteInterface {
 
 	function __construct($route = []){
         if(count($route)>0){
-            if(isset($route['method'])){
-                $this->method = $route['method'];
-            }else{
-                throw new Exception("Route method not found!");
-            }
-            if(isset($route['url'])){
-                $this->url = $route['url'];
-            }else{
-                throw new Exception("Route url not found!");
-            }
-            if(isset($route['class'])){
-                $this->class = new $route['class']();
-            }else{
-                throw new Exception("Route class not found!");
-            }
-            if(isset($route['type'])){
-                $this->type = $route['type'];
-            }else{
-                throw new Exception("Route type not found!");
-            }
-            if(isset($route['callable'])){
-                $this->callable = $route['callable'];
-            }else{
-                throw new Exception("Route callable not found!");
+            foreach($route as $key => $value){
+                if($key == 'class'){
+                    $this->$key = new $value;
+                }else{
+                    $this->$key = $value;
+                }
             }
         }else{
             throw new Exception("Empty route array passed!");
@@ -57,7 +31,8 @@ class Route implements RouteInterface {
             $method = $this->callable;
             return $this->class->$method(...$params);
         }else if($this->type == 'closure'){
-            return $this->callable(...$params);
+            $method = $this->getCallable();
+            return $method(...$params);
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-final class RouterTest extends TestCase
+final class RouterRouterTest extends TestCase
 {
 
     private $collection;
