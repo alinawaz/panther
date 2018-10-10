@@ -25,8 +25,14 @@ class App {
     public function run(){
         $router = &$this->router;
         $this->collection->traverse(function($entity) use ($router){
-            $entity->get()->routes($router);
+            if(method_exists($entity->get(), 'routes')){
+                $entity->get()->routes($router);
+            }
         });
+        $file_routes = new \App\Routing\Routes($router);
+        if(method_exists($file_routes, 'index')){
+            $file_routes->index();
+        }
         $request = resolve('request')->from('router', $_SERVER);
         echo $this->router->run($request, $this->config);
     }

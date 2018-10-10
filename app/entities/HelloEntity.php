@@ -3,13 +3,13 @@
 namespace App\Entities;
 
 use Panther\Entity\EntityController;
+use Panther\Router\Router;
 use Panther\Http\Request;
 
 class HelloEntity extends EntityController {
 
 
-	public function routes($router){
-		$router->get('/', 'index');
+	public function routes(Router $router){		
 		$router->get('/test/:id', 'test');
 		$router->get('/call/:number', function($number){
 			return $this->toJson([

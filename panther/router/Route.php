@@ -16,7 +16,9 @@ class Route implements RouteInterface {
         if(count($route)>0){
             foreach($route as $key => $value){
                 if($key == 'class'){
-                    $this->$key = new $value;
+                    if($value != 'App\Routing\Routes'){ // Ignore main routing file
+                        $this->$key = new $value;
+                    }
                 }else{
                     $this->$key = $value;
                 }
@@ -29,7 +31,15 @@ class Route implements RouteInterface {
     public function invoke($params = []){
         if($this->type == 'function'){
             $method = $this->callable;
-            return $this->class->$method(...$params);
+            if (strpos($method, '@') !== false) {
+                $chunks = explode('@', $method);
+                $class = "\\App\\Entities\\".$chunks[0];
+                $class = new $class;
+                $method = $chunks[1];
+                return $class->$method(...$params);
+            }else{
+                return $this->class->$method(...$params);
+            }
         }else if($this->type == 'closure'){
             $method = $this->getCallable();
             return $method(...$params);
