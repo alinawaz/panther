@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-final class ImporterTest extends TestCase
+final class CoreImporterTest extends TestCase
 {
 
     private $importer;

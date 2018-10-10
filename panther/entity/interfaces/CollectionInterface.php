@@ -8,6 +8,10 @@ interface CollectionInterface  {
 
     public function pop();
 
+    public function count();
+
+    public function flush();
+
     public function traverse($callable);
 
 }

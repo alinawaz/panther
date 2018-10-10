@@ -17,7 +17,17 @@ class Collection implements CollectionInterface {
     }
 
     public function pop(){
+        $entity = $this->collection[count($this->collection)-1];
         unset($this->collection[count($this->collection)-1]);
+        return $entity;
+    }
+
+    public function count(){
+        return count($this->collection);
+    }
+
+    public function flush(){
+        $this->collection = [];
     }
 
     public function traverse($callable){

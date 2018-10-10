@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-final class ConfigTest extends TestCase
+final class CoreConfigTest extends TestCase
 {
 
     private $config;
