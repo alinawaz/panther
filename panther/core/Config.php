@@ -8,7 +8,7 @@ class Config implements ConfigInterface {
 
     private $config;
 
-    function __construct($config){
+    function __construct($config = []){
         $this->config = $config;
     }
 
@@ -28,7 +28,7 @@ class Config implements ConfigInterface {
     }
 
     public function set($key, $value){
-        $this->config[$key] = $vaue;
+        $this->config[$key] = $value;
     }
 
     public function toArray(){
