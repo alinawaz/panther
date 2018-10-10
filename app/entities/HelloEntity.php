@@ -10,7 +10,7 @@ class HelloEntity extends EntityController {
 
 
 	public function routes(Router $router){		
-		$router->get('/test/:id', 'test');
+		
 		$router->get('/call/:number', function($number){
 			return $this->toJson([
 	    		"status" => "OK",

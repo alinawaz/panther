@@ -14,6 +14,7 @@ class Routes {
 
     public function index(){
         $this->router->get('/', 'HelloEntity@index');
+        $this->router->get('/test/:id', 'HelloEntity@test');
     }
 
 }
