@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Panther</title>
+		<link rel="shortcut icon" href="~logo.png">
 		<link href="~css/bootstrap.css" rel="stylesheet"/>
 	</head>
 	<body style="text-align: center;">		

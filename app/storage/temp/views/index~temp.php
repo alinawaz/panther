@@ -1,6 +1,7 @@
 <?php use System\Libs\Lang; use System\Libs\URL; ?><html>
 	<head>
 		<title>Panther</title>
+		<link rel="shortcut icon" href="http://localhost:8080/panther//public/logo.png">
 		<link href="http://localhost:8080/panther//public/css/bootstrap.css" rel="stylesheet"/>
 	</head>
 	<body style="text-align: center;">		
