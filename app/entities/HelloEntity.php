@@ -23,6 +23,10 @@ class HelloEntity extends EntityController {
         $router->patch('/save/:id', 'patchName');
         $router->delete('/remove/:id', 'remove');
     }
+
+    public function index(){
+    	return $this->view('index', ['variable' => 'I am variable from entity!']);
+    }
     
     public function test_post($name, $age, Request $request){
         return $this->toJson([
@@ -57,14 +61,7 @@ class HelloEntity extends EntityController {
             "status" => "OK",
             "message" => "ID {".$id."} deleted Successfully"
         ]);
-    }
-
-    public function index(){
-    	return $this->toJson([
-    		"status" => "OK",
-    		"message" => "Hello from entity"
-    	]);
-    }
+    }    
 
     public function test($id){
     	return $this->toJson([
