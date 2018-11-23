@@ -46,7 +46,7 @@ Now to test this, we need a `Routing` for this entity, it can be either defined 
 ```php
     public function routes(Router $router)
     {		
-        $this->router->get('/test/:id', 'HelloEntity@test');
+        $router->get('/test/:id', 'HelloEntity@test');
     }
 ```
 
