@@ -14,7 +14,7 @@ class HelloEntity extends EntityController {
 
 	public function routes(Router $router){		
 		
-        $this->router->get('/test/:id', 'HelloEntity@test');
+        $router->get('/test/:id', 'HelloEntity@test');
         
     }
 
