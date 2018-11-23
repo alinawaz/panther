@@ -12,6 +12,16 @@ class Config implements ConfigInterface {
         $this->config = $config;
     }
 
+    public function readFromEnv(){
+        $fh = fopen(__DIR__.'\..\..\.env','r');
+        while ($line = fgets($fh)) {
+            $tokens = explode('=', $line);
+            if(count($tokens)>1)
+                $this->config[$tokens[0]] = trim($tokens[1]);
+        }
+        fclose($fh);
+    }
+
     public function mock($config){
         $this->config = $config;
         return $this;

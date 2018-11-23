@@ -2,8 +2,6 @@
 
 namespace App\Routing;
 
-use Panther\Router\Router;
-
 class Routes {
 
     private $router;
@@ -13,8 +11,7 @@ class Routes {
     }
 
     public function index(){
-        $this->router->get('/', 'HelloEntity@index');
-        $this->router->get('/test/:id', 'HelloEntity@test');
+        $this->router->get('/', 'HelloEntity@index');        
     }
 
 }
