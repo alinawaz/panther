@@ -22,15 +22,19 @@ class MysqlQuery implements MysqlQueryInterface {
     public static function connect() {
         MysqlQuery::Close();
         $default = config('db.default');
-        self::$conn = mysqli_connect(
-          config('db.'.$default.'.host'), 
-          config('db.'.$default.'.username'), 
-          config('db.'.$default.'.password'), 
-          config('db.'.$default.'.database'), 
-          config('db.'.$default.'.port')
-        );
+        try{
+            self::$conn = mysqli_connect(
+                config('db.'.$default.'.host'), 
+                config('db.'.$default.'.username'), 
+                config('db.'.$default.'.password'), 
+                config('db.'.$default.'.database'), 
+                config('db.'.$default.'.port')
+            );
+        }catch(Exception $e){
+            exit("Panther: Unable to connect to database.");
+        }
         if (mysqli_connect_errno()) {
-            echo "Crazy Database MSQLI Error: " . mysqli_connect_error();
+            exit("<h3>Panther: Unable to connect to database.</h3>");
         }
         MysqlQuery::$connected = true;
         return true;

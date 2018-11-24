@@ -6,5 +6,5 @@ use Panther\Database\Model;
 
 class Entry extends Model
 {
-	protected static $table = 'entries';
+	protected static $table = 'items';
 }

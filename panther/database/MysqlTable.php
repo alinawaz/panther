@@ -316,7 +316,7 @@ class MysqlTable Implements MysqlTableInterface {
 
     public static function getPK(){
         $key = '';
-        $pkQuery = DB::Query("SHOW KEYS FROM entries WHERE Key_name = 'PRIMARY'");
+        $pkQuery = DB::Query("SHOW KEYS FROM ".MysqlTable::$tableName." WHERE Key_name = 'PRIMARY'");
         if($pkQuery){
             while ($data = mysqli_fetch_assoc($pkQuery)) {
                 $key = $data['Column_name'];
