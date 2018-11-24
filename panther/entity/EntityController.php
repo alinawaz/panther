@@ -12,7 +12,9 @@ class EntityController implements EntityControllerInterface {
 
 	public function view($viewFile, $data = null, $renderable = true) {
 		$output = '';
-		$actualFile = 'app/views/' . $viewFile . ".php";
+		$viewFile = str_replace('.', '/', $viewFile);
+		$viewFile = str_replace("'", "", $viewFile);
+		$actualFile = 'app/views/' . $viewFile . '.php';
 		ob_start();
 		include_once $actualFile;
 		$output = ob_get_clean();		
@@ -23,8 +25,8 @@ class EntityController implements EntityControllerInterface {
 		$phpForEach = match($output,'*@foreach(?)',TRUE);
 		$phpElseIf = match($output,'*@elseif(?)',TRUE);
         
-        $output = str_replace("~", config('base_url') . '/public/', $output);
-        $output = str_replace("url:", config('base_url') ."/", $output);
+        $output = str_replace("~", config('url') . '/public/', $output);
+        $output = str_replace("url:", config('url') ."/", $output);
         if(is_array($includes)){
 	        foreach($includes as $inc){
 	        	$output = str_replace("@include(".$inc.")", self::view($inc,null,false), $output);
@@ -86,16 +88,20 @@ class EntityController implements EntityControllerInterface {
 				$$var = $val;
 			}
 		}
+
 		// Outputting into file
 		$fileArray = explode('/',$viewFile);
+		$root_path = 'app/storage/temp/views';
 		if(count($fileArray)>0){
 			for($i=0;$i<count($fileArray)-1;$i++){
-				if (!file_exists('app/storage/temp/views/'.$fileArray[$i])) {
-					mkdir('app/storage/temp/views/'.$fileArray[$i], 0777);
+				$root_path = $root_path . '/' . $fileArray[$i];
+				if (!file_exists($root_path)) {					
+					mkdir($root_path, 0777);					
 				}
 			}
 		}
-		$actualFile = 'app/storage/temp/views/' . $viewFile . "~temp.php";
+		
+		$actualFile = $root_path . '/' . $fileArray[count($fileArray)-1] . "~temp.php";
 		// Re-rendering view
 		self::renderViewToFile($actualFile,$output);
 		// Grabing Content from cache	

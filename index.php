@@ -13,7 +13,9 @@ $app = new \Panther\App();
     All entity classes needs to be registered here
     Panther will take care of migrations, seeders, routes & models for you! */
 $app->register('HelloEntity', 'hello');
-$app->register('TestEntity', 'test');
+
+/* Documentation Entity */
+$app->register('DocumentationEntity', 'documentation');
 
 /* Running the application */
 $app->run();

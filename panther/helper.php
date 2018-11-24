@@ -19,6 +19,10 @@ function resolve($class){
     return new \Panther\Core\Importer($class);
 }
 
+function url($link){
+    return "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . $link;
+}
+
 function match($string, $condition, $recursive = FALSE){
     $gotStrings = Array();
     $gotCount = -1;

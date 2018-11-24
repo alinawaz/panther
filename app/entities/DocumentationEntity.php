@@ -5,14 +5,14 @@ namespace App\Entities;
 use Panther\Entity\EntityController;
 use Panther\Router\Router;
 
-class TestEntity extends EntityController {
+class DocumentationEntity extends EntityController {
 
     public function routes(Router $router){	
-        $router->get('/test', 'TestEntity@index');
+        $router->get('/documentation', 'DocumentationEntity@index');
     }
 
     public function index(){	
-        return $this->toJson([ 'Hello from TestEntity' ]);
+        return $this->view('documentation.layout.app');
     }
 
 }
