@@ -17,5 +17,8 @@ $app->register('HelloEntity', 'hello');
 /* Documentation Entity */
 $app->register('DocumentationEntity', 'documentation');
 
+// Database testing entity
+$app->register('DatabaseEntity', 'database');
+
 /* Running the application */
 $app->run();
