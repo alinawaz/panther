@@ -30,4 +30,8 @@ class Collection implements CollectionInterface {
         return '404';
     }
 
+    public function get(){
+        return $this->collection;
+    }
+
 }

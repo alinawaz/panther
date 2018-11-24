@@ -99,7 +99,8 @@ class Request implements RequestInterface {
     }
 
     public function getUrl(){
-        $url = $this->request['REQUEST_SCHEME'].'://';
+        //dd($this->request);
+        $url = 'http://';
         $port = '';
         if($this->request['SERVER_PORT']!='80'){
             $port = ":".$this->request['SERVER_PORT'];

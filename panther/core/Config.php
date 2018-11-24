@@ -13,7 +13,9 @@ class Config implements ConfigInterface {
     }
 
     public function readFromEnv(){
-        $fh = fopen(__DIR__.'\..\..\.env','r');
+        $current = __DIR__;
+        $current = str_replace('panther/Core', '', $current);
+        $fh = fopen($current.'.env','r');
         while ($line = fgets($fh)) {
             $tokens = explode('=', $line);
             if(count($tokens)>1)
