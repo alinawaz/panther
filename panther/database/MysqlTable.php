@@ -7,42 +7,42 @@ use Panther\Database\Interfaces\MysqlTableInterface;
 
 class MysqlTable Implements MysqlTableInterface {
 
-    private static $tableName = '';
-    private static $queryBuilderString = '';
-    private static $queryBuilderWhere = '';
-    private static $queryBuilderAfterWhere = '';
-    private static $lastQuery = '';
-    private static $joinTable = '';
+    private $tableName = '';
+    private $queryBuilderString = '';
+    private $queryBuilderWhere = '';
+    private $queryBuilderAfterWhere = '';
+    private $lastQuery = '';
+    private $joinTable = '';
 
     function __construct($tableNameString) {
-        MysqlTable::$tableName = $tableNameString;
-        MysqlTable::$queryBuilderString .= "SELECT * FROM ".MysqlTable::$tableName;
+        $this->tableName = $tableNameString;
+        $this->queryBuilderString .= "SELECT * FROM ".$this->tableName;
         return $this;
     }
 
-    public static function getLastQuery() {
-      return MysqlTable::$lastQuery;
+    public function getLastQuery() {
+      return $this->lastQuery;
     }
 
-    private static function getQuery(){
-      return MysqlTable::$queryBuilderString.' '.MysqlTable::$queryBuilderWhere . ' ' . MysqlTable::$queryBuilderAfterWhere;
+    public function getQuery(){
+      return $this->queryBuilderString.' '.$this->queryBuilderWhere . ' ' . $this->queryBuilderAfterWhere;
     }
 
-    private static function resetQueryBuilder(){
-      MysqlTable::$lastQuery = MysqlTable::$queryBuilderString.' '.MysqlTable::$queryBuilderWhere . ' ' . MysqlTable::$queryBuilderAfterWhere;
-      MysqlTable::$queryBuilderString='';
-      MysqlTable::$queryBuilderWhere='';
-      MysqlTable::$queryBuilderAfterWhere='';
+    public function resetQueryBuilder(){
+      $this->lastQuery = $this->queryBuilderString.' '.$this->queryBuilderWhere . ' ' . $this->queryBuilderAfterWhere;
+      $this->queryBuilderString='';
+      $this->queryBuilderWhere='';
+      $this->queryBuilderAfterWhere='';
     }
 
     public function with($table,$joinType=''){
-        MysqlTable::$queryBuilderWhere .= " ".$joinType." ".$joinType." JOIN ".$table." ON ".$table.".".MysqlTable::$tableName."_id=".MysqlTable::$tableName.".id ";
+        $this->queryBuilderWhere .= " ".$joinType." JOIN ".$table." ON ".$table.".".$this->tableName."_id=".$this->tableName.".id ";
         return $this;
     }
 
     public function join($table,$joinType=''){
-        MysqlTable::$joinTable = $table;
-        MysqlTable::$queryBuilderWhere .= " ".$joinType." JOIN ".$table." ";
+        $this->joinTable = $table;
+        $this->queryBuilderWhere .= " ".$joinType." JOIN ".$table." ";
         return $this;
     }
 
@@ -52,21 +52,21 @@ class MysqlTable Implements MysqlTableInterface {
         if ($arrayOrColumnName != null) {
             foreach ($arrayOrColumnName as $key => $value) {
                 if ($whereString == "") {
-                    $whereString = $whereString . " " . MysqlTable::$joinTable . "." . $key . "=" . MysqlTable::$tableName . "." . $value . " ";
+                    $whereString = $whereString . " " . $this->joinTable . "." . $key . "=" . $this->tableName . "." . $value . " ";
                 } else {
-                    $whereString = $whereString . " ".$conditionType." " .MysqlTable::$joinTable . "." . $key . "=" .MysqlTable::$tableName . "." . $value . " ";
+                    $whereString = $whereString . " ".$conditionType." " .$this->joinTable . "." . $key . "=" .$this->tableName . "." . $value . " ";
                 }
             }
-            MysqlTable::$queryBuilderWhere .= " ON ". $whereString;
+            $this->queryBuilderWhere .= " ON ". $whereString;
         }
       }else{
-        MysqlTable::$queryBuilderWhere .= ' ON '. MysqlTable::$joinTable . "." . $arrayOrColumnName . "=" . MysqlTable::$tableName . "." . $columnValue . " ";
+        $this->queryBuilderWhere .= ' ON '. $this->joinTable . "." . $arrayOrColumnName . "=" . $this->tableName . "." . $columnValue . " ";
       }
       return $this;
     }
 
     public function select($queryString){
-      MysqlTable::$queryBuilderString = "SELECT ".$queryString." FROM ".MysqlTable::$tableName;
+      $this->queryBuilderString = "SELECT ".$queryString." FROM ".$this->tableName;
       return $this;
     }
 
@@ -81,10 +81,10 @@ class MysqlTable Implements MysqlTableInterface {
                     $whereString = $whereString . " OR " . $key . "='" . $value . "' ";
                 }
             }
-            MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' OR ') . $whereString;
+            $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' OR ') . $whereString;
         }
       }else{
-        MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' OR ') . $arrayOrColumnName." = '".$columnValue."' ";
+        $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' OR ') . $arrayOrColumnName." = '".$columnValue."' ";
       }
       return $this;
     }
@@ -100,10 +100,10 @@ class MysqlTable Implements MysqlTableInterface {
                     $whereString = $whereString . " AND " . $key . "='" . $value . "' ";
                 }
             }
-            MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' AND ') . $whereString;
+            $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' AND ') . $whereString;
         }
       }else{
-        MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' AND ') . $arrayOrColumnName." = '".$columnValue."' ";
+        $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' AND ') . $arrayOrColumnName." = '".$columnValue."' ";
       }
       return $this;
     }
@@ -119,10 +119,10 @@ class MysqlTable Implements MysqlTableInterface {
                     $whereString = $whereString . " ".$conditionType." " . $key . "='" . $value . "' ";
                 }
             }
-            MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $whereString;
+            $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $whereString;
         }
       }else{
-        MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $arrayOrColumnName." = '".$columnValue."' ";
+        $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $arrayOrColumnName." = '".$columnValue."' ";
       }
       return $this;
     }
@@ -138,10 +138,10 @@ class MysqlTable Implements MysqlTableInterface {
                     $whereString = $whereString . " ".$conditionType." " . $key . " " . $value . " ";
                 }
             }
-            MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $whereString;
+            $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $whereString;
         }
       }else{
-        MysqlTable::$queryBuilderWhere .= (MysqlTable::$queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $arrayOrColumnName." ".$columnValue;
+        $this->queryBuilderWhere .= ($this->queryBuilderWhere==''?' WHERE ':' '.$conditionType.' ') . $arrayOrColumnName." ".$columnValue;
       }
       return $this;
     }
@@ -152,9 +152,9 @@ class MysqlTable Implements MysqlTableInterface {
             for ($i=0; $i < count($columns); $i++) { 
                 $orders .= ($orders==''?$columns[$i]:','.$columns[$i]);
             }
-            MysqlTable::$queryBuilderWhere .= ' ORDER BY ' . $orders;
+            $this->queryBuilderWhere .= ' ORDER BY ' . $orders;
         }else{
-            MysqlTable::$queryBuilderWhere .= ' ORDER BY ' . $columns . ' ' .$order;
+            $this->queryBuilderWhere .= ' ORDER BY ' . $columns . ' ' .$order;
         }
         return $this;
     }
@@ -165,19 +165,19 @@ class MysqlTable Implements MysqlTableInterface {
             for ($i=0; $i < count($columns); $i++) { 
                 $groups .= ($groups==''?$columns[$i]:','.$columns[$i]);
             }
-            MysqlTable::$queryBuilderWhere .= ' GROUP BY ' . $groups;
+            $this->queryBuilderWhere .= ' GROUP BY ' . $groups;
         }else{
-            MysqlTable::$queryBuilderWhere .= ' GROUP BY ' . $columns;
+            $this->queryBuilderWhere .= ' GROUP BY ' . $columns;
         }
         return $this;
     }
 
     public function limit($start,$length=NULL){
-        MysqlTable::$queryBuilderWhere .= ' LIMIT '.($length!=NULL?$start.",".$length:$start);
+        $this->queryBuilderWhere .= ' LIMIT '.($length!=NULL?$start.",".$length:$start);
         return $this;
     }
 
-    public static function exists() {
+    public function exists() {
         $sql = DB::Query(MysqlTable::getQuery());
         if(!$sql){
             MysqlTable::resetQueryBuilder();
@@ -191,7 +191,7 @@ class MysqlTable Implements MysqlTableInterface {
         return false;
     }
 
-    public static function result($mode='rows'){
+    public function result($mode='rows'){
         $sql = DB::Query(MysqlTable::getQuery());
         $record = array();
         if($sql)
@@ -208,7 +208,7 @@ class MysqlTable Implements MysqlTableInterface {
         return $record;
     }
 
-    public static function get(){
+    public function get(){
       $sql = DB::Query(MysqlTable::getQuery());
       $record = array();
       if($sql)
@@ -221,7 +221,7 @@ class MysqlTable Implements MysqlTableInterface {
       return FALSE;
     }
 
-    public static function first(){
+    public function first(){
       $sql = DB::Query(MysqlTable::getQuery());
       $record = array();
       if($sql)
@@ -234,7 +234,7 @@ class MysqlTable Implements MysqlTableInterface {
       return FALSE;
     }
 
-    public static function insert($dataArray) {
+    public function insert($dataArray) {
         $columns = '';
         $values = '';
         if ($dataArray) {
@@ -250,7 +250,7 @@ class MysqlTable Implements MysqlTableInterface {
                     $values = $values . ",'" . $value . "'";
                 }
             }
-            DB::Query("insert into `" . MysqlTable::$tableName . "` (" . $columns . ") values (" . $values . ");");
+            DB::Query("insert into `" . $this->tableName . "` (" . $columns . ") values (" . $values . ");");
             $id = @mysqli_insert_id();
             self::resetQueryBuilder();
             return $id;
@@ -262,7 +262,7 @@ class MysqlTable Implements MysqlTableInterface {
         return false;
     }
 
-    public static function update($dataArray, $matchArray) {
+    public function update($dataArray, $matchArray) {
         $updates = '';
         $matches = '';
         if ($dataArray && $matchArray) {
@@ -280,7 +280,7 @@ class MysqlTable Implements MysqlTableInterface {
                     $matches = $matches . " and " . $key . "='" . $value . "'";
                 }
             }
-            $tempQuery = "update `" . MysqlTable::$tableName . "` set " . $updates . " where " . $matches;
+            $tempQuery = "update `" . $this->tableName . "` set " . $updates . " where " . $matches;
             $response = DB::Query($tempQuery);
             self::resetQueryBuilder();
             return $response;
@@ -292,7 +292,7 @@ class MysqlTable Implements MysqlTableInterface {
         return false;
     }
 
-    public static function delete($matchArray) {
+    public function delete($matchArray) {
         $matches = '';
         if ($matchArray) {
             foreach ($matchArray as $key => $value) {
@@ -302,7 +302,7 @@ class MysqlTable Implements MysqlTableInterface {
                     $matches = $matches . " and " . $key . "='" . $value . "'";
                 }
             }
-            $queryString = "delete from `" . MysqlTable::$tableName . "` where " . $matches;
+            $queryString = "delete from `" . $this->tableName . "` where " . $matches;
             $response = DB::Query($queryString);
             self::resetQueryBuilder();
             return $response;
@@ -314,9 +314,9 @@ class MysqlTable Implements MysqlTableInterface {
         return false;
     }
 
-    public static function getPK(){
+    public function getPK(){
         $key = '';
-        $pkQuery = DB::Query("SHOW KEYS FROM ".MysqlTable::$tableName." WHERE Key_name = 'PRIMARY'");
+        $pkQuery = DB::Query("SHOW KEYS FROM ".$this->tableName." WHERE Key_name = 'PRIMARY'");
         if($pkQuery){
             while ($data = mysqli_fetch_assoc($pkQuery)) {
                 $key = $data['Column_name'];
@@ -327,8 +327,8 @@ class MysqlTable Implements MysqlTableInterface {
         return $key;
     }
 
-    public static function truncate() {
-        DB::Query("truncate table `" . MysqlTable::$tableName . "`");
+    public function truncate() {
+        DB::Query("truncate table `" . $this->tableName . "`");
         self::resetQueryBuilder();
         return true;
     }

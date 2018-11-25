@@ -6,45 +6,45 @@ use Panther\Core\Interfaces\ConfigInterface;
 
 class Config implements ConfigInterface {
 
-    private $config;
+    private static $config;
 
-    function __construct($config = []){
-        $this->config = $config;
-    }
-
-    public function readFromEnv(){
+    public static function setup()
+    {
         $current = __DIR__;
         $current = str_replace('panther/Core', '', $current);
-        $fh = fopen($current.'.env','r');
-        while ($line = fgets($fh)) {
-            $tokens = explode('=', $line);
-            if(count($tokens)>1)
-                $this->config[$tokens[0]] = trim($tokens[1]);
+        if(file_exists($current.'.env')){
+            $fh = fopen($current.'.env','r');
+            while ($line = fgets($fh)) {
+                $tokens = explode('=', $line);
+                if(count($tokens)>1)
+                    self::$config[$tokens[0]] = trim($tokens[1]);
+            }
+            fclose($fh);
         }
-        fclose($fh);
     }
 
-    public function mock($config){
-        $this->config = $config;
-        return $this;
-    }
-
-    public function has($key){
-        if(isset($this->config[$key]))
+    public static function has($key)
+    {
+        if(isset(self::$config[$key]))
             return true;
         return false;
     }
 
-    public function get($key){
-        return $this->config[$key];
+    public static function get($key)
+    {
+        if(self::has($key))
+            return self::$config[$key];
+        return '';
     }
 
-    public function set($key, $value){
-        $this->config[$key] = $value;
+    public static function set($key, $value)
+    {
+        self::$config[$key] = $value;
     }
 
-    public function toArray(){
-        return $this->config;
+    public static function toArray()
+    {
+        return self::$config;
     }
 
 }
