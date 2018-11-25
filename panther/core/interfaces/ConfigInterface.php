@@ -3,15 +3,13 @@
 namespace Panther\Core\Interfaces;
 
 interface ConfigInterface {
-
-    public function mock($config);
     
-    public function has($key);
+    public static function has($key);
 
-    public function get($key);
+    public static function get($key);
 
-    public function set($key, $value);
+    public static function set($key, $value);
 
-    public function toArray();
+    public static function toArray();
 
 }

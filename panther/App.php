@@ -12,7 +12,7 @@ class App {
         global $global_config;
         $this->router = resolve('router')->from('router');
         $this->config = new \Panther\Core\Config($config);
-        $this->config->readFromEnv();
+        $this->config->setup();
         $global_config = $this->config;
         $this->collection = new \Panther\Entity\Collection;
     }

@@ -4,7 +4,7 @@ namespace Panther\Database\Interfaces;
 
 interface MysqlTableInterface {
 
-	public static function getLastQuery();
+	public function getLastQuery();
 
     public function with($table,$joinType);
 
@@ -28,22 +28,22 @@ interface MysqlTableInterface {
 
     public function limit($start,$length);
 
-    public static function exists();
+    public function exists();
 
-    public static function result($mode);
+    public function result($mode);
 
-    public static function get();
+    public function get();
 
-    public static function first();
+    public function first();
 
-    public static function insert($dataArray);
+    public function insert($dataArray);
 
-    public static function update($dataArray, $matchArray);
+    public function update($dataArray, $matchArray);
 
-    public static function delete($matchArray);
+    public function delete($matchArray);
 
-    public static function getPK();
+    public function getPK();
 
-    public static function truncate();
+    public function truncate();
 	
 }
