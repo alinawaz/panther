@@ -2,6 +2,16 @@
 
 require 'vendor/autoload.php';
 
+use Symfony\Component\Debug\Debug;
+
+Debug::enable();
+
+use Symfony\Component\Dotenv\Dotenv;
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+
+
 /* Global helper file */
 include_once 'panther/helper.php';
 

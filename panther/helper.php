@@ -112,11 +112,3 @@ function match($string, $condition, $recursive = FALSE){
     }
     return FALSE;
 }
-
-
-function dd($data){
-    echo "<pre>";
-    var_dump($data);
-    echo "</pre>";
-    exit;
-}

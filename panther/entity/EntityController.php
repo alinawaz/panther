@@ -2,12 +2,20 @@
 
 namespace Panther\Entity;
 
+use Panther\Http\Request;
+use Panther\Entity\EntityValidation;
 use \Panther\Entity\Interfaces\EntityControllerInterface;
 
 class EntityController implements EntityControllerInterface {
 	
 	public function toJson($data){
 		return json_encode($data);
+	}
+
+	public function validate(Request $request, $rules)
+	{
+		$validation = new EntityValidation($request);
+		return $validation->validate($rules);
 	}
 
 	public function view($viewFile, $data = null, $renderable = true) {
@@ -73,6 +81,7 @@ class EntityController implements EntityControllerInterface {
 			return $output;
 			return self::loadViewFromCache($viewFile,$output,$data);
 	}
+
 	private static function renderViewToFile($actualFile,$output){
 		$file = fopen($actualFile ,"w");
 		fwrite($file,$output);

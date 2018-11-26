@@ -1,10 +1,10 @@
 <?php use System\Libs\Lang; use System\Libs\URL; ?><html>
 	<head>
 		<title>Panther - Documentation</title>
-		<link rel="shortcut icon" href="http://panther.test/public/logo.png">
-		<link href="http://panther.test/public/css/bootstrap.min.css" rel="stylesheet"/>
-        <script src="http://panther.test/public/js/jquery331.min.js"></script>
-        <script src="http://panther.test/public/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="/public/logo.png">
+		<link href="/public/css/bootstrap.min.css" rel="stylesheet"/>
+        <script src="/public/js/jquery331.min.js"></script>
+        <script src="/public/js/bootstrap.min.js"></script>
 	</head>
 	<body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">

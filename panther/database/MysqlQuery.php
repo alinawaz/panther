@@ -2,7 +2,6 @@
 
 namespace Panther\Database;
 
-use Panther\Core\Config;
 use Panther\Database\Interfaces\MysqlQueryInterface;
 
 class MysqlQuery implements MysqlQueryInterface
@@ -19,20 +18,20 @@ class MysqlQuery implements MysqlQueryInterface
         if(MysqlQuery::$connected)
             MysqlQuery::close();
 
-        $default = Config::get('db.default');
+        $default = getenv('DB_DEFAULT');
         self::$conn = @mysqli_connect(
-            Config::get('db.'.$default.'.host'), 
-            Config::get('db.'.$default.'.username'), 
-            Config::get('db.'.$default.'.password'), 
-            Config::get('db.'.$default.'.database'), 
-            Config::get('db.'.$default.'.port')
+            getenv('DB_'.$default.'_HOST'), 
+            getenv('DB_'.$default.'_USERNAME'), 
+            getenv('DB_'.$default.'_PASSWORD'), 
+            getenv('DB_'.$default.'_DATABASE'), 
+            getenv('DB_'.$default.'_PORT')
         );
         if(self::$conn){
             MysqlQuery::$connected = true;
             return true;
         }
         MysqlQuery::$connected = false;
-        return false;
+        throw new \Exception('Unable to connect to database.');
     }
 
     public static function close() {
