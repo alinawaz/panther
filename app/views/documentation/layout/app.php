@@ -8,7 +8,7 @@
 	</head>
 	<body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Panther v1 - Docs</a>
+            <a class="navbar-brand" href="#">Panther Docs</a>
         </nav>
         <div class="row" style="padding: 10px;">
             <div class="col-2">

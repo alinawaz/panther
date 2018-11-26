@@ -2,7 +2,7 @@
 
 namespace Panther\Database\Interfaces;
 
-interface MysqlQueryInterface {
+interface QueryInterface {
 
 	public static function getLastQuery();
 
