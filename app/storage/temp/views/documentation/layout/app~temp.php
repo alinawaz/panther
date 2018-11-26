@@ -8,7 +8,7 @@
 	</head>
 	<body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Panther v1 - Docs</a>
+            <a class="navbar-brand" href="#">Panther Docs</a>
         </nav>
         <div class="row" style="padding: 10px;">
             <div class="col-2">
@@ -125,7 +125,7 @@
 </p>
 <h5>Creating New Entity</h3>
 <p>
-    Creating new entity is easy, you just need to type in followinf command
+    Creating new entity is easy, you just need to type in following command
     
 </p></div>
                     <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>

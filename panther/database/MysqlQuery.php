@@ -2,9 +2,10 @@
 
 namespace Panther\Database;
 
-use Panther\Database\Interfaces\MysqlQueryInterface;
+use Panther\Core\Config;
+use Panther\Database\Interfaces\QueryInterface;
 
-class MysqlQuery implements MysqlQueryInterface
+class MysqlQuery implements QueryInterface
 {
 
     private static $connected = false;
@@ -15,8 +16,8 @@ class MysqlQuery implements MysqlQueryInterface
     private static $mocked_instance = NULL;
 
     public static function connect() {
-        if(MysqlQuery::$connected)
-            MysqlQuery::close();
+        if(self::$connected)
+            self::close();
 
         $default = getenv('DB_DEFAULT');
         self::$conn = @mysqli_connect(
@@ -27,7 +28,7 @@ class MysqlQuery implements MysqlQueryInterface
             getenv('DB_'.$default.'_PORT')
         );
         if(self::$conn){
-            MysqlQuery::$connected = true;
+            self::$connected = true;
             return true;
         }
         MysqlQuery::$connected = false;
@@ -35,34 +36,34 @@ class MysqlQuery implements MysqlQueryInterface
     }
 
     public static function close() {
-        if (MysqlQuery::$connected == true) {
+        if (self::$connected == true) {
             mysqli_close(self::$conn);
-            MysqlQuery::$connected = false;
+            self::$connected = false;
             return true;
         }
         return false;
     }
 
     public static function query($QueryString) {
-        MysqlQuery::Connect();
-        MysqlQuery::$lastQuery = $QueryString;
+        self::Connect();
+        self::$lastQuery = $QueryString;
         $result = mysqli_query(self::$conn,$QueryString);
         if(!$result)
             $result = mysqli_error(self::$conn);
-        MysqlQuery::Close();        
+        self::Close();        
         return $result;
     }
 
     public static function getLastQuery(){
         return Array(
-            'Last Direct Query' => MysqlQuery::$lastQuery,
-            'Last Table Query' => MysqlQuery::$lastTable ? MysqlQuery::$lastTable->getLastQuery(): ''
+            'Last Direct Query' => self::$lastQuery,
+            'Last Table Query' => self::$lastTable ? self::$lastTable->getLastQuery(): ''
         );
     }
 
     public static function table($table){
-        MysqlQuery::$lastTable = new MysqlTable($table);
-        return MysqlQuery::$lastTable;
+        self::$lastTable = new MysqlTable($table);
+        return self::$lastTable;
     }
 
 }

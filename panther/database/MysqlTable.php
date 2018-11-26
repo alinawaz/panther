@@ -3,9 +3,9 @@
 namespace Panther\Database;
 
 use Panther\Database\MysqlQuery as DB;
-use Panther\Database\Interfaces\MysqlTableInterface;
+use Panther\Database\Interfaces\TableInterface;
 
-class MysqlTable Implements MysqlTableInterface {
+class MysqlTable Implements TableInterface {
 
     private $tableName = '';
     private $queryBuilderString = '';
