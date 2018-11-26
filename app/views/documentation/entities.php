@@ -47,6 +47,6 @@
 </p>
 <h5>Creating New Entity</h3>
 <p>
-    Creating new entity is easy, you just need to type in followinf command
+    Creating new entity is easy, you just need to type in following command
     
 </p>
