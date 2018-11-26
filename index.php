@@ -14,9 +14,9 @@ $dotenv->load(__DIR__.'/.env');
 
 /* Global helper file */
 include_once 'panther/helper.php';
+base(__DIR__, $_SERVER['DOCUMENT_ROOT']);
 
-/* New application initialization
-    Constructor takes in configs */ 
+/* New application initialization */ 
 $app = new \Panther\App();
 
 /*  Entities registration

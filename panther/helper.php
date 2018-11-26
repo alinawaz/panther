@@ -2,25 +2,22 @@
 
 // Common helper
 // version@1.0
-
-$global_config = null;
-
-function config($key=null, $value=null){
-    global $global_config;
-    if($key == null)
-        return $global_config;
-    if($value == null)
-        return $global_config->get($key);
-    if($key != null && $value != null)
-        $global_config->set($key, $value);
-}
+$base_url = '';
 
 function resolve($class){
     return new \Panther\Core\Importer($class);
 }
 
+function base($dir, $base){
+    global $base_url;
+    $dir = str_replace("\\", "/", $dir);
+    $dir = str_replace($base, '', $dir);
+    $base_url = $dir;
+}
+
 function url($link){
-    return "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . $link;
+    global $base_url;
+    return $base_url.$link;
 }
 
 function match($string, $condition, $recursive = FALSE){

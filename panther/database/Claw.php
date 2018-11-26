@@ -14,7 +14,7 @@ use Panther\Database\MysqlQuery;
 class Claw {
 
 	public static function defaultDb(){
-		if(config('db.default')=='mysql')
+		if(getenv('DB_DEFAULT')=='MYSQL')
 			return new MysqlQuery;
 		return new MysqlQuery;
 	}

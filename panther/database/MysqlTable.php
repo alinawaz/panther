@@ -2,6 +2,7 @@
 
 namespace Panther\Database;
 
+use Panther\Core\ErrorView;
 use Panther\Database\MysqlQuery as DB;
 use Panther\Database\Interfaces\TableInterface;
 
@@ -178,16 +179,13 @@ class MysqlTable Implements TableInterface {
     }
 
     public function exists() {
-        $sql = DB::Query(MysqlTable::getQuery());
-        if(!$sql){
-            MysqlTable::resetQueryBuilder();
-            return FALSE;
-        }
-        if ($res = mysqli_fetch_array($sql)){
-            MysqlTable::resetQueryBuilder();
-            return true;
-        }
+        $response = DB::Query(MysqlTable::getQuery());
         MysqlTable::resetQueryBuilder();
+        if($response['status']){
+            if ($res = mysqli_fetch_array($response['result'])){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -222,16 +220,15 @@ class MysqlTable Implements TableInterface {
     }
 
     public function first(){
-      $sql = DB::Query(MysqlTable::getQuery());
-      $record = array();
-      if($sql)
-        if ($data = mysqli_fetch_assoc($sql)) {
-            $record = $data;
+      $response = DB::Query(MysqlTable::getQuery());
+      MysqlTable::resetQueryBuilder();      
+      if($response['status']){
+        if ($data = mysqli_fetch_assoc($response['result'])) {
+            return (object) $data;
         }
-      MysqlTable::resetQueryBuilder();
-      if($record)
-        return (object) $record;
-      return FALSE;
+      }
+
+      return false;
     }
 
     public function insert($dataArray) {
@@ -315,6 +312,11 @@ class MysqlTable Implements TableInterface {
     }
 
     public function getPK(){
+        $response = DB::Query('SELECT * FROM '.$this->tableName);
+        if($response['status'] == FALSE){
+            MysqlTable::resetQueryBuilder();
+            ErrorView::render('Database Error', $response['message']);
+        }
         $key = '';
         $pkQuery = DB::Query("SHOW KEYS FROM ".$this->tableName." WHERE Key_name = 'PRIMARY'");
         if($pkQuery){

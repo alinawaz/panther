@@ -2,7 +2,8 @@
 
 namespace Panther\Router;
 
-use \Panther\Router\Interfaces\CollectionInterface;
+use Panther\Core\ErrorView;
+use Panther\Router\Interfaces\CollectionInterface;
 
 class Collection implements CollectionInterface {
 
@@ -27,10 +28,7 @@ class Collection implements CollectionInterface {
                 return $callable($request, $route, $response);
             }
         }
-        return '<link href="/public/css/bootstrap.min.css" rel="stylesheet"/><div class="jumbotron">
-  <h1 class="display-4">404 - Not Found</h1>
-  <p class="lead">Page you are looking for was not found.</p>
-</div>';
+        return ErrorView::render('404 - Not Found', 'Page you are looking for was not found.');
     }
 
     public function get(){

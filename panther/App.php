@@ -8,12 +8,10 @@ class App {
     private $config;
     private $router;
 
-    function __construct($config = []){
-        global $global_config;
+    function __construct(){
         $this->router = resolve('router')->from('router');
-        $this->config = new \Panther\Core\Config($config);
+        $this->config = new \Panther\Core\Config();
         $this->config->setup();
-        $global_config = $this->config;
         $this->collection = new \Panther\Entity\Collection;
     }
 
@@ -36,7 +34,6 @@ class App {
             $file_routes->index();
         }
         $request = resolve('request')->from('router', $_SERVER);
-        config('base_url', $request->getUrl());
         echo $this->router->run($request, $this->config);
     }
 

@@ -2,6 +2,7 @@
 
 namespace Panther\Database;
 
+use Panther\Core\ErrorView;
 use Panther\Core\Config;
 use Panther\Database\Interfaces\QueryInterface;
 
@@ -32,7 +33,7 @@ class MysqlQuery implements QueryInterface
             return true;
         }
         MysqlQuery::$connected = false;
-        throw new \Exception('Unable to connect to database.');
+        ErrorView::render('Database Error', 'Unable to connect to database. Please check your configs inside .env file on root directory.');
     }
 
     public static function close() {
@@ -47,11 +48,17 @@ class MysqlQuery implements QueryInterface
     public static function query($QueryString) {
         self::Connect();
         self::$lastQuery = $QueryString;
-        $result = mysqli_query(self::$conn,$QueryString);
+        $result = mysqli_query(self::$conn, $QueryString);
         if(!$result)
-            $result = mysqli_error(self::$conn);
+            return [
+                'status' => false,
+                'message' => mysqli_error(self::$conn)
+            ];
         self::Close();        
-        return $result;
+        return [
+            'status' => true,
+            'result' => $result
+        ];
     }
 
     public static function getLastQuery(){
