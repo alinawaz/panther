@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Panther\Database\Model;
 
-class Entry extends Model
+class Item extends Model
 {
 	protected static $table = 'items';
 }

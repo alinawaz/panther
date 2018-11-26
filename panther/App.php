@@ -9,6 +9,7 @@ class App {
     private $router;
 
     function __construct(){
+        session_start();
         $this->router = resolve('router')->from('router');
         $this->config = new \Panther\Core\Config();
         $this->config->setup();

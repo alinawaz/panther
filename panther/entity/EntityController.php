@@ -33,8 +33,8 @@ class EntityController implements EntityControllerInterface {
 		$phpForEach = match($output,'*@foreach(?)',TRUE);
 		$phpElseIf = match($output,'*@elseif(?)',TRUE);
         
-        $output = str_replace("~", config('url') . '/public/', $output);
-        $output = str_replace("url:", config('url') ."/", $output);
+        $output = str_replace("~", url('') . '/public/', $output);
+        $output = str_replace("url:", url('') ."/", $output);
         if(is_array($includes)){
 	        foreach($includes as $inc){
 	        	$output = str_replace("@include(".$inc.")", self::view($inc,null,false), $output);

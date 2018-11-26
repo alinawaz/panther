@@ -31,6 +31,7 @@ class SeedCommand extends Command
         $class = "\\App\\Database\\Seeders\\".$name;
         $seeder = new $class();
         if($input->getOption('rollback') == 'yes'){
+            $output->writeln('Rolling back changes ...');  
             $seeder->rollback();  
         }
         $seeder->run();      

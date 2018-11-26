@@ -318,9 +318,9 @@ class MysqlTable Implements TableInterface {
             ErrorView::render('Database Error', $response['message']);
         }
         $key = '';
-        $pkQuery = DB::Query("SHOW KEYS FROM ".$this->tableName." WHERE Key_name = 'PRIMARY'");
-        if($pkQuery){
-            while ($data = mysqli_fetch_assoc($pkQuery)) {
+        $response = DB::Query("SHOW KEYS FROM ".$this->tableName." WHERE Key_name = 'PRIMARY'");
+        if($response['status']){
+            while ($data = mysqli_fetch_assoc($response['result'])) {
                 $key = $data['Column_name'];
                 break;
             }

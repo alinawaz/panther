@@ -7,7 +7,7 @@ use Panther\Router\Router;
 use Panther\Http\Request;
 
 // Using models
-use App\Models\Entry;
+use App\Models\Item;
 
 class HelloEntity extends EntityController {
 
@@ -29,7 +29,7 @@ class HelloEntity extends EntityController {
             "status" => "OK",
             "message" => "Hello from entity",
             "param" => "Passed ID is ".$id,
-            "data" => Entry::find($id)
+            "data" => Item::find($id)
         ]);
 
     }
@@ -50,7 +50,7 @@ class HelloEntity extends EntityController {
         return $this->toJson([
             "status" => true,
             "param" => "Passed ID is ".$request->id,
-            "data" => Entry::find($request->id)
+            "data" => Item::find($request->id)
         ]);
 
     }

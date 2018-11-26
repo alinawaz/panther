@@ -20,6 +20,7 @@ class Users {
 			$table->string('name')->required();
 			$table->string('email')->required();
 			$table->string('password')->required();
+			$table->string('token')->optional();
 			$table->integer('status')->default(1);
 		});
 	}

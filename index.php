@@ -27,5 +27,7 @@ $app->register('HelloEntity', 'hello');
 /* Documentation Entity */
 $app->register('DocumentationEntity', 'documentation');
 
+$app->register('UserEntity', 'user');
+
 /* Running the application */
 $app->run();

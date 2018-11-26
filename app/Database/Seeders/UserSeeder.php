@@ -10,7 +10,8 @@ class UserSeeder {
 		DB::defaultDb()->table('users')->insert([
 			'name' => 'Ali',
 			'email' => 'alinawaz@email.com',
-			'password' => '123'
+			'password' => '123',
+			'token' => '123456'
 		]);
 	}
 
