@@ -12,6 +12,7 @@ $dotenv->load(__DIR__.'/.env');
 $application = new Application();
 
 $application->add(new \Panther\Cli\CreateEntityCommand());
+$application->add(new \Panther\Cli\CreateModelCommand());
 $application->add(new \Panther\Cli\CreateMigrationCommand());
 $application->add(new \Panther\Cli\MigrateCommand());
 $application->add(new \Panther\Cli\MigrateAllCommand());
