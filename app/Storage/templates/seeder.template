@@ -1,0 +1,20 @@
+<?php
+namespace App\Database\Seeders;
+
+use Panther\Database\Claw as DB;
+
+class <class_name> {
+
+	public function run()
+	{
+		DB::defaultDb()->table('<table_name>')->insert([
+			
+		]);
+	}
+
+	public function rollback()
+	{
+		DB::defaultDb()->table('<table_name>')->truncate();
+	}
+
+}

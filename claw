@@ -15,5 +15,7 @@ $application->add(new \Panther\Cli\CreateEntityCommand());
 $application->add(new \Panther\Cli\CreateMigrationCommand());
 $application->add(new \Panther\Cli\MigrateCommand());
 $application->add(new \Panther\Cli\MigrateAllCommand());
+$application->add(new \Panther\Cli\CreateSeederCommand());
+$application->add(new \Panther\Cli\SeedCommand());
 
 $application->run();
