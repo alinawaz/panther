@@ -27,7 +27,10 @@ class Collection implements CollectionInterface {
                 return $callable($request, $route, $response);
             }
         }
-        return '404';
+        return '<link href="/public/css/bootstrap.min.css" rel="stylesheet"/><div class="jumbotron">
+  <h1 class="display-4">404 - Not Found</h1>
+  <p class="lead">Page you are looking for was not found.</p>
+</div>';
     }
 
     public function get(){
