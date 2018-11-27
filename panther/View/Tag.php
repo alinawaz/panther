@@ -54,28 +54,28 @@ class Tag implements TagInterface
 		];
 	}
 
-	public function match($search, $view)
+	public function match($search, $content)
 	{
-		return match($view, $search, $this->find_all);
+		return match($content, $search, $this->find_all);
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		foreach($this->searches as $search){
-			$items = match($view, $search['source'], $this->find_all);
+			$items = match($content, $search['source'], $this->find_all);
 			if($items){
 				foreach($items as $item){
 					$source = str_replace('*', '', $search['source']);
 					$source = str_replace('?', $item, $source);
 					$target = str_replace('@replace', $item, $search['target']);
-					$view = str_replace($source, $target, $view);
+					$content = str_replace($source, $target, $content);
 				}
 			}
 		}
 		foreach($this->replaces as $replace){
-			$view = str_replace($replace['source'], $replace['target'], $view);
+			$content = str_replace($replace['source'], $replace['target'], $content);
 		}
-		return $view;
+		return $content;
 	}
 
 }

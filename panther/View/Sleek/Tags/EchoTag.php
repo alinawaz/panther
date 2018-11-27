@@ -13,10 +13,10 @@ class EchoTag
 		$this->tag = new Tag;		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->findAnywhere('{{?}}', '<?php echo @replace; ?>');
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

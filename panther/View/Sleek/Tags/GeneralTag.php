@@ -13,14 +13,14 @@ class GeneralTag
 		$this->tag = new Tag;		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->replace("@else", '<?php }else{ ?>');
 		$this->tag->replace("@php", '<?php');
 		$this->tag->replace("@endphp", '?>');
 		$this->tag->replace("~", url('/public/'));
 		$this->tag->replace("url:", url('/'));
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

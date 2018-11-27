@@ -4,6 +4,8 @@ namespace Panther\View\Interfaces;
 interface TagInterface
 {
 	
+	public function replace($search, $replace, $content);
+
 	public function find($search, $replace);
 
 	public function findStartWith($search, $replace);
@@ -12,6 +14,8 @@ interface TagInterface
 
 	public function findAnywhere($search, $replace);
 
-	public function render($view);
+	public function match($search, $content);
+
+	public function render($content);
 
 }

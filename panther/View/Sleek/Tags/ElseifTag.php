@@ -13,10 +13,10 @@ class ElseifTag
 		$this->tag = new Tag;		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->findEndWith('@elseif(?)', '<?php }elseif(@replace){ ?>');
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

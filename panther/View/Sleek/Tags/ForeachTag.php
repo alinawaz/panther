@@ -13,11 +13,11 @@ class ForeachTag
 		$this->tag = new Tag;		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->findEndWith('@foreach(?)', '<?php foreach(@replace){ ?>');
 		$this->tag->replace("@endforeach", '<?php } ?>');
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

@@ -10,15 +10,14 @@ class ForTag
 
 	function __construct()
 	{
-		$this->tag = new Tag;
-		
+		$this->tag = new Tag;		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->findEndWith('@for(?)', '<?php for(@replace){ ?>');
 		$this->tag->replace("@endfor", '<?php } ?>');
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

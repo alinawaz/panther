@@ -11,14 +11,13 @@ class IfTag
 	function __construct()
 	{
 		$this->tag = new Tag;
-		
 	}
 
-	public function render($view)
+	public function render($content)
 	{
 		$this->tag->findEndWith('@if(?)', '<?php if(@replace){ ?>');		
 		$this->tag->replace("@endif", '<?php } ?>');
-		return $this->tag->render($view);
+		return $this->tag->render($content);
 	}
 
 }

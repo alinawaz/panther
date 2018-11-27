@@ -11,11 +11,11 @@ class Index implements RendererInterface
 
 	public function render($view, $data = NULL)
 	{
-		$content = $this->parse($view);		
-		$content = $this->layouts($content, $data);
-		$content = $this->renderTags($content);
-		$content = $this->includes($content, $data);		
-		return  Cache::render($view, $content, $data);	
+		$parsed_content = $this->parse($view);		
+		$parsed_content = $this->layouts($parsed_content, $data);
+		$parsed_content = $this->renderTags($parsed_content);
+		$parsed_content = $this->includes($parsed_content, $data);		
+		return  Cache::render($view, $parsed_content, $data);	
 	}
 
 	private function layouts($content, $data = NULL)
@@ -78,11 +78,11 @@ class Index implements RendererInterface
 		return $content;
 	}
 
-	private function parse($view)
+	private function parse($content)
 	{
-		$view = str_replace('.', '/', $view);
-		$view = str_replace("'", "", $view);
-		$actualFile = getEnv('VIEW_PATH') . '/' . $view . '.php';
+		$content = str_replace('.', '/', $content);
+		$content = str_replace("'", "", $content);
+		$actualFile = getEnv('VIEW_PATH') . '/' . $content . '.php';
 		ob_start();
 		include_once $actualFile;
 		return ob_get_clean();	
