@@ -10,7 +10,7 @@
 			<h1 class="display-4">Panther</h1>
 			<p class="lead">Fast & Light-weight predator.</p>
 			<hr class="my-4">
-			<a class="btn btn-primary btn-lg" href="{{url('documentation')}}" role="button">Documentation</a>
+			<p>You have been logged into the system successfully via panther authentication!</p>
 		</div>
 	</body>
 </html>

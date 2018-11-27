@@ -7,6 +7,8 @@ use Panther\Http\Request;
 use Panther\Router\Router;
 use Panther\Security\Auth;
 
+use Panther\Core\Mail;
+
 use App\Models\User;
 
 class UserEntity extends EntityController {
@@ -25,6 +27,7 @@ class UserEntity extends EntityController {
         $token = Auth::login($request);
     	if($token)
     	{
+            Mail::send(Auth::user()->email, 'Logged In', $this->view('email_template'));
     		return $this->toJson([
 	    		'status' => true,
                 'token' => $token,
