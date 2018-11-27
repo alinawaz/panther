@@ -4,7 +4,7 @@ namespace Panther\Entity;
 
 use Panther\Http\Request;
 use Panther\Entity\EntityValidation;
-use Panther\View\Template;
+use Panther\View\Engine;
 use \Panther\Entity\Interfaces\EntityControllerInterface;
 
 class EntityController implements EntityControllerInterface {
@@ -22,7 +22,7 @@ class EntityController implements EntityControllerInterface {
 	
 	public function view($view, $data = null)
 	{
-		return Template::render($view, $data);
+		return Engine::render($view, $data);
 	}
 
 	/* NOTE: This function is obsolete now 

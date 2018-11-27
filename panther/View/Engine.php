@@ -1,16 +1,16 @@
 <?php
 namespace Panther\View;
 
-class Template
+class Engine
 {
 
 	/* Renders a html template file with selected renderer */
-	public static function render($content, $data)
+	public static function render($view, $data)
 	{
 		if(getEnv('VIEW_RENDERER') == '')
-			return self::fallbackRenderer($content, $data);
+			return self::fallbackRenderer($view, $data);
 		$renderer = resolve('view.'.getEnv('VIEW_RENDERER').'.index');
-		return $renderer->render($content, $data);
+		return $renderer->render($view, $data);
 	}
 
 	/* When no renderer selected from env, plain execution will take place. */

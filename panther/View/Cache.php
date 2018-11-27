@@ -15,7 +15,7 @@ class Cache
 			return self::reRender($file, $content, $data);
 
 		// Full paths
-		$view_file = self::viewFile(getEnv('VIEW_PATH'), $file);
+		$view_file = self::viewFile($file);
 		$cached_file = self::cacheFile($file);
 
 		// Check for changes in source view file
