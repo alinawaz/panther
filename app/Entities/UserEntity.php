@@ -5,6 +5,7 @@ namespace App\Entities;
 use Panther\Entity\EntityController;
 use Panther\Http\Request;
 use Panther\Router\Router;
+use Panther\Security\Auth;
 
 use App\Models\User;
 
@@ -21,11 +22,13 @@ class UserEntity extends EntityController {
 
     public function authenticate(Request $request)
     {
-    	$token = User::authenticate($request->email, $request->password);
+        $token = Auth::login($request);
     	if($token)
     	{
     		return $this->toJson([
 	    		'status' => true,
+                'token' => $token,
+                'user' => Auth::user(),
 	    		'message' => 'Logged in successfully!'
 	    	]);
     	}

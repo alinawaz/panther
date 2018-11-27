@@ -2,7 +2,8 @@
 
 namespace Panther\Router;
 
-use \Panther\Router\Interfaces\RouterInterface;
+use Panther\Router\Interfaces\RouterInterface;
+use Panther\Security\Auth;
 
 class Router implements RouterInterface {
 
@@ -29,12 +30,16 @@ class Router implements RouterInterface {
             // POST Request
             if($request->isPost() && !$response->hasParams){
                 $http_request = new \Panther\Http\Request($request->getPostData());
-                return $route->invoke($http_request);
+                return Auth::secure($route, $http_request, function($route){
+                    return $route->invoke($http_request);
+                });                
             }
             if($request->isPost() && $response->hasParams){
                 $http_request = new \Panther\Http\Request($request->getPostData());
                 $response->params[] = $http_request;
-                return $route->invoke($response->params);
+                return Auth::secure($route, $http_request, function($route) use($response) {
+                    return $route->invoke($response->params);
+                });                  
             }
 
             // PUT Request
@@ -74,13 +79,14 @@ class Router implements RouterInterface {
 
     }
     
-    private function make($url, $method, $class, $callable){
+    private function make($url, $method, $class, $callable, $secure = false){
         $this->collection->push(new \Panther\Router\Route([
             'method' => $method,
             'url' => $url,
             'class' => $class,
             'type' => ($callable instanceof Closure ? 'closure' : 'function'),
-            'callable' => $callable
+            'callable' => $callable,
+            'auth' => $secure
         ]));
     }
 
@@ -90,10 +96,10 @@ class Router implements RouterInterface {
         $this->make($url, 'GET', $class, $callable);  	
     }
 
-    public function post($url, $callable){    	
+    public function post($url, $callable, $secure = false){    	
     	$trace = debug_backtrace();
         $class = $trace[1]['class'];
-        $this->make($url, 'POST', $class, $callable);     	
+        $this->make($url, 'POST', $class, $callable, $secure);     	
     }
 
     public function put($url, $callable){    	

@@ -16,4 +16,9 @@ class Session
 		return NULL;
 	}
 
+	public static function puff($key)
+	{
+		unset($_SESSION[$key]);
+	}
+
 }

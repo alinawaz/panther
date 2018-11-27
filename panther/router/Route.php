@@ -11,6 +11,7 @@ class Route implements RouteInterface {
     private $class;
     private $type;
     private $callable;
+    private $auth = false;
 
 	function __construct($route = []){
         if(count($route)>0){
@@ -68,6 +69,10 @@ class Route implements RouteInterface {
         $this->callable = $callable;
     }
 
+    public function setAuth($auth){
+        $this->auth = $auth;
+    }
+
     // Getters
 
     public function getMethod(){
@@ -88,6 +93,10 @@ class Route implements RouteInterface {
 
     public function getCallable(){
         return $this->callable;
+    }
+
+    public function getAuth(){
+        return $this->auth;
     }
 
 }
