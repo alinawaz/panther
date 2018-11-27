@@ -12,7 +12,7 @@ class SleekEntity extends EntityController {
     }
 
     public function index(){	
-        return $this->sleek('sleek', [
+        return $this->view('sleek', [
         	'test' => '123',
         	'items' => ['item1', 'item2', 'item3']
         ]);

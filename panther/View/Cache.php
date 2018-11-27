@@ -11,37 +11,37 @@ class Cache
 	public static function render($view_path, $file, $content, $data = NULL)
 	{
 		// If view caching is disabled
-		if(getEnv('VIEW_CACHING') == 'FALSE')
+		if(getEnv('VIEW_CACHING') == 'false')
 			return self::reRender($file, $content, $data);
 
-		// Cahched File
-		$tokens = explode('/', $file);
-		$last_token = $tokens[count($tokens)-1];
-		$cached_file = self::$view_cache_path . '/' . $last_token . "~temp.php";
-		// View File
-		$view_file = $view_path.'/'.$file.'.php';
+		// Full paths
+		$view_file = self::viewFile($view_path, $file);
+		$cached_file = self::cacheFile($file);
 
 		// Check for changes in source view file
 		$stamp = Session::get('cache_stamp');
 		if($stamp != FALSE){
 			if(filemtime($view_file) == $stamp && file_exists($cached_file)){
-				dump('cached-view');
 				return self::read($cached_file, $data);
 			}
 		}
 
 		// No change found, let's load cached version
 		Session::set('cache_stamp', filemtime($view_file));
-		dump('rendered-view');
 		return self::reRender($file, $content, $data);
 	}
 
-	private static function reRender($file, $content, $data = NULL)
+	private static function viewFile($view_path, $file)
 	{
-		// Making directories if required
 		$file = str_replace("'", '', $file);
 		$file = str_replace('.', '/', $file);
-		
+		return $view_path.'/'.$file.'.php';
+	}
+
+	private static function cacheFile($file)
+	{
+		$file = str_replace("'", '', $file);
+		$file = str_replace('.', '/', $file);
 		$tokens = explode('/', $file);
 		$full_path = self::$view_cache_path;
 		if(count($tokens)>0){
@@ -53,9 +53,13 @@ class Cache
 			}
 		}
 		$last_token = $tokens[count($tokens)-1];
+		return $full_path . '/' . $last_token . "~temp.php";
+	}
 
+	private static function reRender($file, $content, $data = NULL)
+	{
 		// Writing contents to cache view
-		$cached_file = $full_path . '/' . $last_token . "~temp.php";
+		$cached_file = self::cacheFile($file);
 		self::write($cached_file, $content);
 		
 		// Reading cached view		
