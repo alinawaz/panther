@@ -4,6 +4,6 @@ namespace Panther\Core\Interfaces;
 
 interface ImporterInterface {
 
-    public function from($package, $constructor);
+    public function resolve($context, $constructor);
 
 }

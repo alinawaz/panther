@@ -4,8 +4,9 @@
 // version@1.0
 $base_url = '';
 
-function resolve($class){
-    return new \Panther\Core\Importer($class);
+function resolve($context, $constructor = NULL){
+    $importer = new \Panther\Core\Importer;
+    return $importer->resolve($context, $constructor);
 }
 
 function base($dir, $base){

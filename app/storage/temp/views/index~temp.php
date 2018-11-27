@@ -1,4 +1,4 @@
-<?php use System\Libs\Lang; use System\Libs\URL; ?><html>
+<html>
 	<head>
 		<title>Panther</title>
 		<link rel="shortcut icon" href="/public/logo.png">

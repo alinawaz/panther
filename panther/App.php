@@ -10,7 +10,7 @@ class App {
 
     function __construct(){
         session_start();
-        $this->router = resolve('router')->from('router');
+        $this->router = resolve('router.router');
         $this->config = new \Panther\Core\Config();
         $this->config->setup();
         $this->collection = new \Panther\Entity\Collection;
@@ -34,7 +34,7 @@ class App {
         if(method_exists($file_routes, 'index')){
             $file_routes->index();
         }
-        $request = resolve('request')->from('router', $_SERVER);
+        $request = resolve('router.request', $_SERVER);
         echo $this->router->run($request, $this->config);
     }
 

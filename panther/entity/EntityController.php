@@ -4,6 +4,7 @@ namespace Panther\Entity;
 
 use Panther\Http\Request;
 use Panther\Entity\EntityValidation;
+use Panther\View\Engine;
 use \Panther\Entity\Interfaces\EntityControllerInterface;
 
 class EntityController implements EntityControllerInterface {
@@ -18,14 +19,24 @@ class EntityController implements EntityControllerInterface {
 		return $validation->validate($rules);
 	}
 
-	public function view($viewFile, $data = null, $renderable = true) {
+	
+	public function view($view, $data = null)
+	{
+		return Engine::render($view, $data);
+	}
+
+	/* NOTE: This function is obsolete now 
+	*  It is here just for reference
+	*/
+	public function view_old($viewFile, $data = null, $renderable = true) {
 		$output = '';
 		$viewFile = str_replace('.', '/', $viewFile);
 		$viewFile = str_replace("'", "", $viewFile);
 		$actualFile = 'app/views/' . $viewFile . '.php';
 		ob_start();
 		include_once $actualFile;
-		$output = ob_get_clean();		
+		$output = ob_get_clean();	
+
         $includes = match($output,'*@include(?)*',TRUE);
         $phpShortEchos = match($output,'*{{?}}*',TRUE);
 		$phpIf = match($output,'*@if(?)',TRUE);
@@ -79,15 +90,21 @@ class EntityController implements EntityControllerInterface {
 		$output = str_replace("@endphp", ' ?>', $output);
 		if(!$renderable)
 			return $output;
-			return self::loadViewFromCache($viewFile,$output,$data);
+		return self::loadViewFromCache($viewFile,$output,$data);
 	}
 
+	/* NOTE: This function is obsolete now 
+	*  It is here just for reference
+	*/
 	private static function renderViewToFile($actualFile,$output){
 		$file = fopen($actualFile ,"w");
 		fwrite($file,$output);
 		fclose($file);
 	}
 	
+	/* NOTE: This function is obsolete now 
+	*  It is here just for reference
+	*/
 	private static function loadViewFromCache($viewFile,$output,$data){
 		// Includings by default
 		$output = '<?php use System\Libs\Lang; use System\Libs\URL; ?>' . $output;
