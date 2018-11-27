@@ -8,14 +8,14 @@ class Cache
 	
 	private static $view_cache_path = 'app/storage/temp/views';
 
-	public static function render($view_path, $file, $content, $data = NULL)
+	public static function render($file, $content, $data = NULL)
 	{
 		// If view caching is disabled
 		if(getEnv('VIEW_CACHING') == 'false')
 			return self::reRender($file, $content, $data);
 
 		// Full paths
-		$view_file = self::viewFile($view_path, $file);
+		$view_file = self::viewFile(getEnv('VIEW_PATH'), $file);
 		$cached_file = self::cacheFile($file);
 
 		// Check for changes in source view file
@@ -31,11 +31,11 @@ class Cache
 		return self::reRender($file, $content, $data);
 	}
 
-	private static function viewFile($view_path, $file)
+	private static function viewFile($file)
 	{
 		$file = str_replace("'", '', $file);
 		$file = str_replace('.', '/', $file);
-		return $view_path.'/'.$file.'.php';
+		return getEnv('VIEW_PATH').'/'.$file.'.php';
 	}
 
 	private static function cacheFile($file)

@@ -9,15 +9,13 @@ use Panther\View\Tag;
 class Index implements RendererInterface
 {
 
-	private $view_path = 'app/views';	
-
 	public function render($view, $data = NULL)
 	{
 		$content = $this->parse($view);		
 		$content = $this->layouts($content, $data);
 		$content = $this->renderTags($content);
 		$content = $this->includes($content, $data);		
-		return  Cache::render($this->view_path, $view, $content, $data);	
+		return  Cache::render($view, $content, $data);	
 	}
 
 	private function layouts($content, $data = NULL)
@@ -33,7 +31,7 @@ class Index implements RendererInterface
 
 				$layout_file = str_replace("'", '', $layout_title);
 				$layout_file = str_replace('.', '/', $layout_file);
-				$layout_file = $this->view_path . '/' . $layout_file . '.php';
+				$layout_file = getEnv('VIEW_PATH') . '/' . $layout_file . '.php';
 				$layout_file_contents = file_get_contents($layout_file);
 				$parsed_content = $layout_file_contents;
 
@@ -84,7 +82,7 @@ class Index implements RendererInterface
 	{
 		$view = str_replace('.', '/', $view);
 		$view = str_replace("'", "", $view);
-		$actualFile = $this->view_path . '/' . $view . '.php';
+		$actualFile = getEnv('VIEW_PATH') . '/' . $view . '.php';
 		ob_start();
 		include_once $actualFile;
 		return ob_get_clean();	
