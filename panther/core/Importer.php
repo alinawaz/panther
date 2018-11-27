@@ -6,27 +6,18 @@ use Panther\Core\Interfaces\ImporterInterface;
 
 class Importer implements ImporterInterface {
 
-    private $class;
-
-    function __construct($class){
-        $this->class = $class;
+    public function resolve($context, $constructor = NULL){
+        $path = $this->buildPath($context);
+        return new $path($constructor);
     }
 
-    public function from($package, $constructor=null){
-        if($package == 'router'){
-            if($this->class == 'request'){
-                if($constructor != null){
-                    return new \Panther\Router\Request($constructor);
-                }
-                return new \Panther\Router\Request;
-            }
-            if($this->class == 'router'){
-                if($constructor != null){
-                    return new \Panther\Router\Router($constructor);
-                }
-                return new \Panther\Router\Router;
-            }
-        }
+    private function buildPath($context){
+    	$path = '\\Panther';
+    	$context_array = explode('.', $context);
+    	foreach($context_array as $ctx){
+    		$path .= '\\' . ucwords($ctx);
+    	}
+        return $path;
     }
 
 }

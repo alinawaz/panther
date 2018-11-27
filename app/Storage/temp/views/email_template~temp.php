@@ -2,7 +2,7 @@
 	<head>
 		<title>Panther</title>
 		<link rel="shortcut icon" href="/public/logo.png">
-		<link href="/public/css/bootstrap.css" rel="stylesheet"/>
+		<link href="/public/css/bootstrap.min.css" rel="stylesheet"/>
 	</head>
 	<body style="text-align: center;">		
 		<div class="jumbotron">

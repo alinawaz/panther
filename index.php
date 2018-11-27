@@ -29,5 +29,8 @@ $app->register('DocumentationEntity', 'documentation');
 
 $app->register('UserEntity', 'user');
 
+// For testing new view rendering
+$app->register('SleekEntity');
+
 /* Running the application */
 $app->run();
