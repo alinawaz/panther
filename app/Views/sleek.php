@@ -8,4 +8,12 @@
 		For next level templating.
 	@endsection
 
-#layout
+	@section('data')
+	<ul>
+		@foreach($items as $item)
+		<li>{{$item->name}}</li>
+		@endforeach
+	</ul>
+	@endsection
+
+@endlayout

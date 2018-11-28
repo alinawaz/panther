@@ -17,9 +17,7 @@ class Items {
 	{
 		$this->schema->create('items', function(StructureInterface $table){
 			$table->increments('id');
-			$table->integer('user_id')->required();
 			$table->string('name')->required();
-			$table->integer('quantity')->required()->default(1);
 		});
 	}
 

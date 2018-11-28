@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Sleek Layout</title>
+		<title>Sleek</title>
 		<link rel="shortcut icon" href="/public/logo.png">
 		<link href="/public/css/bootstrap.min.css" rel="stylesheet"/>
         <script src="/public/js/jquery331.min.js"></script>
@@ -15,5 +15,12 @@
 		For next level templating.
 	</p>
 		</div>
+		
+	<ul>
+		<?php foreach($items as $item){ ?>
+		<li><?php echo $item->name; ?></li>
+		<?php } ?>
+	</ul>
+	
     </body>
 </html>

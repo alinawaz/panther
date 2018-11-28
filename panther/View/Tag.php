@@ -3,6 +3,8 @@ namespace Panther\View;
 
 use Panther\View\Interfaces\TagInterface;
 
+use Panther\Core\String\Find;
+
 class Tag implements TagInterface
 {
 	
@@ -56,7 +58,9 @@ class Tag implements TagInterface
 
 	public function match($search, $content)
 	{
-		return match($content, $search, $this->find_all);
+		$find = new Find($content);
+		return $find->match($search);				
+		//return match($content, $search, $this->find_all);
 	}
 
 	public function render($content)

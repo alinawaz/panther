@@ -6,6 +6,8 @@ use Panther\View\Interfaces\RendererInterface;
 use Panther\View\Cache;
 use Panther\View\Tag;
 
+use Panther\Core\String\Find;
+
 class Index implements RendererInterface
 {
 
@@ -22,12 +24,12 @@ class Index implements RendererInterface
 	{
 		$parsed_content = $content;
 		$tag = new Tag;
-		$layouts = $tag->match('*@layout(?)?#layout*', $content);		
+		$layouts = $tag->match('*@layout(?)?@endlayout*', $content);	
 
 		if($layouts){
 			for($i=0; $i<count($layouts); $i++){
-				$layout_title = $layouts[$i];
-				$layout_content = $layouts[++$i];
+				$layout_title = $layouts[$i][0];
+				$layout_content = $layouts[$i][1];
 
 				$layout_file = str_replace("'", '', $layout_title);
 				$layout_file = str_replace('.', '/', $layout_file);
@@ -35,17 +37,17 @@ class Index implements RendererInterface
 				$layout_file_contents = file_get_contents($layout_file);
 				$parsed_content = $layout_file_contents;
 
-				$yields = $tag->match('*@yield(?)*', $layout_file_contents);			
+				$yields = $tag->match('*@yield(?)*', $layout_file_contents);
 
-				$sections = $tag->match('*@section(?)?@endsection', $layout_content);
+				$sections = $tag->match('*@section(?)?@endsection*', $layout_content);
 
 				if($sections){
 					for($j=0; $j<count($sections); $j++){
-						$section_title = $sections[$j];
-						$section_content = $sections[++$j];
+						$section_title = $sections[$j][0];
+						$section_content = $sections[$j][1];
 						foreach($yields as $yield){
-							if($yield == $section_title)
-								$parsed_content = str_replace('@yield('.$yield.')', $section_content, $parsed_content);
+							if($yield[0] == $section_title)
+								$parsed_content = str_replace('@yield('.$yield[0].')', $section_content, $parsed_content);
 						}
 					}
 				}

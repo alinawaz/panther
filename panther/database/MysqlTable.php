@@ -207,10 +207,10 @@ class MysqlTable Implements TableInterface {
     }
 
     public function get(){
-      $sql = DB::Query(MysqlTable::getQuery());
+      $response = DB::Query(MysqlTable::getQuery());
       $record = array();
-      if($sql)
-        while ($data = mysqli_fetch_assoc($sql)) {
+      if($response['status'])
+        while ($data = mysqli_fetch_assoc($response['result'])) {
             $record[] = (object) $data;
         }
       MysqlTable::resetQueryBuilder();
