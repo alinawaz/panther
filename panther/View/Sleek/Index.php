@@ -62,8 +62,8 @@ class Index implements RendererInterface
 		$includes = $tag->match('*@include(?)*', $content);
 		if($includes){
 			foreach($includes as $include){
-				$included_content = $this->render($include, $data);
-				$content = $tag->replace('@include('.$include.')', $included_content, $content);
+				$included_content = $this->render($include[0], $data);
+				$content = $tag->replace('@include('.$include[0].')', $included_content, $content);
 			}
 		}
 		return $content;
