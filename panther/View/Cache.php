@@ -8,6 +8,25 @@ class Cache
 	
 	private static $view_cache_path = 'app/storage/temp/views';
 
+	public static function changed($file)
+	{
+		// If view caching is disabled
+		if(getEnv('VIEW_CACHING') == 'false')
+			return true;
+
+		// Full paths
+		$view_file = self::viewFile($file);
+		$cached_file = self::cacheFile($file);
+
+		$stamp = Session::get('cache_stamp');
+		if($stamp != FALSE){
+			if(filemtime($view_file) == $stamp && file_exists($cached_file)){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static function render($file, $content, $data = NULL)
 	{
 		// If view caching is disabled

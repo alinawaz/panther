@@ -13,10 +13,18 @@ class Index implements RendererInterface
 
 	public function render($view, $data = NULL)
 	{
+		// If view is not changes, let's return cached view
+		if(!Cache::changed($view)){
+			return  Cache::render($view, NULL, $data);
+		}
+
+		// If view is changed, let's re-render the view & cache it
 		$parsed_content = $this->parse($view);		
 		$parsed_content = $this->layouts($parsed_content, $data);
 		$parsed_content = $this->renderTags($parsed_content);
-		$parsed_content = $this->includes($parsed_content, $data);		
+		$parsed_content = $this->includes($parsed_content, $data);
+
+		// Returing the view	
 		return  Cache::render($view, $parsed_content, $data);	
 	}
 
