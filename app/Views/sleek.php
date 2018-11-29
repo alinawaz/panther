@@ -1,11 +1,11 @@
 @layout('layouts.sleek_layout')
 
 	@section('title')
-		Sleek Engine
+		Sleek
 	@endsection
 
 	@section('content')
-		For next level templating.
+		Panther templating engine.
 	@endsection
 
 	@section('data')
